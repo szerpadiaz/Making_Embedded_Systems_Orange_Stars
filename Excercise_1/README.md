@@ -14,7 +14,7 @@ the system as discussed in Chapter 2 and the associated lectures. More diagrams 
 This embedded system is called: "Magic Writer - A handwritting trainner for kids". It is a toy to help kids to learn how to write the numbers from 1 to 9 as well as the letters from a to z.
 Figure 1 shows how Magic Writer looks like.
 
-![Screenshot](MagicWriter.png)
+![Screenshot](MagicWriter.jpeg)
 
 
 
@@ -34,4 +34,4 @@ Repeat the process to learn all avaiable symbols!
 
 The software block diagram in Figure 2 shows the main components of the embedded system.
 
-![Screenshot](MagicWriter_sw_block_diagram.png)
+![Screenshot](MagicWriter_sw_block_diagram.jpg)
