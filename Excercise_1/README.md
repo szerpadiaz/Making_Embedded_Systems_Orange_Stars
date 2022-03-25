@@ -16,8 +16,6 @@ Figure 1 shows how Magic Writer looks like.
 
 ![Screenshot](MagicWriter.jpeg)
 
-
-
 ## What does it do?
 
 Magic Writer works as follows:
