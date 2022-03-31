@@ -38,8 +38,7 @@ The board has very interesting set of sensors, such as:
 - Support both: single-ended and differential input
 
 
-### How much does the board cost vs what the processor costs? Is the processor in stock
-anywhere?
+### How much does the board cost vs what the processor costs? Is the processor in stock anywhere?
 
 - Board cost: 19,93 EUR 
 - Processor cost: 6,21 EUR
