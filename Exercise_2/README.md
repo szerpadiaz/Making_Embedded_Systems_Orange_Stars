@@ -1,35 +1,46 @@
-# Exercise 1: Idea project diagram
-
-Tell us about an embedded system that does not exist. It can be grandiose or strange; it can be
-something just one step beyond what you have around you. Ideally it is something you
-personally want to build (even if physics doesn’t allow it). If you have a final project in mind, you
-can start on that. If not, be imaginative, reality does not need to apply here.
-What is it? What does it do? What general components do you need?
-This should be summarized in 3-6 sentences. Then make at least one block diagram describing
-the system as discussed in Chapter 2 and the associated lectures. More diagrams are better
+# Exercise 2: Investigate Project Boards
 
 
-## What is it?
+## Board 1: The Thunderboard Sense 2 from Silicon Labs(SLTB0004A)
 
-This embedded system is called: "Magic Writer - A handwriting trainer for kids". It is a toy to help kids to learn how to write the numbers from 1 to 9 as well as the letters from a to z.
-Figure 1 shows how Magic Writer looks like.
+The Thunderboard Sense 2 is a multi-sensor, multi- protocol development platform for IoT applications.
+It is energy-friendly, provides several sensors and supports proprietary stacks and standard protocols such as Zigbee, Thread and Bluetooth.
+Figure 1 shows a hardware block diagram for the board.
 
-![Screenshot](MagicWriter.jpeg)
+![Screenshot](SLTB004A_Board_BlockDiagram.jpg)
 
-## What does it do?
+### What kind of processor is it?
+The board has a EFR32MG12 Mighty Gecko Wireless SoC. This is an energy-friendly MCU with a highly integrated radio transceiver.
+The MCU has a 38.4 MHz operating frequency, 1024 kB flash and 256 kB RAM
+ 
+### How much Flash and RAM does it have? Any other memory types?
+- Flash:1024 kB 
+- RAM: 256 kB
+- External Serial Flash: 8 Mbits (for OTA programming and data logging)
 
-Magic Writer works as follows:
+### Does it have any special peripherals?
 
-1. Select the symbol you want to learn using the "select-button" on the left. As you select, the symbols will appear on the LCD next to the button.
-2. Once you have decided which symbol to learn, take the pencil and press the "go-button" on the right.
-3. Magic Writer, will give you visual and audio instructions about how to write the symbol.
-4. Write the symbol on the blackboard next to the LCD.
-5. Magic writer will recognise what you write and tell you if you wrote the selected symbol correctly.
+The board has very interesting set of sensors, such as:
+- Relative humidity and temperature sensor
+- UV index and ambient light sensor
+- Barometric pressure sensor
+- Indoor air quality gas sensor
+- 6-axis inertial sensor
 
-Repeat the process to learn all avaiable symbols!
+### If it has an ADC, what are the features?
 
-## What general components do you need?
+- Successive Approximation Register (SAR) architecture
+- 12 bits resolution
+- Up to 1Msps
+- Configurable output resolution
+- Integrated voltage references
+- Integrated temperature sensor
+- Support both: single-ended and differential input
 
-The software block diagram in Figure 2 shows the main components of the embedded system.
 
-![Screenshot](MagicWriter_sw_block_diagram.jpg)
+### How much does the board cost vs what the processor costs? Is the processor in stock
+anywhere?
+
+- Board cost: 19,93 EUR 
+- Processor cost: 6,21 EUR
+- Availability: currently not available but it might become available in the next 3 weeks at: https://de.rs-online.com/, https://www.silabs.com/, https://www.mouser.de/ and https://www.digikey.de
