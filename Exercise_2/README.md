@@ -1,7 +1,7 @@
 # Exercise 2: Investigate Project Boards
 
 
-## Board 1: The Thunderboard Sense 2 from Silicon Labs(SLTB0004A)
+## Board 1: The Thunderboard Sense 2 from Silicon Labs (SLTB0004A)
 
 The Thunderboard Sense 2 is a multi-sensor, multi- protocol development platform for IoT applications.
 It is energy-friendly, provides several sensors and supports proprietary stacks and standard protocols such as Zigbee, Thread and Bluetooth.
