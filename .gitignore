@@ -1,0 +1,14 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore the following folders
+STM_SandBox
+
+# Ignore all text files
+#*.txt
+
+# Ignore files related to API keys
+.env
+
+# Ignore SASS config files
+#.sass-cache
