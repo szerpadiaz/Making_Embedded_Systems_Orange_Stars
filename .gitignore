@@ -1,8 +1,9 @@
 # Ignore Mac system files
 .DS_store
 
-# Ignore the following folders
-STM_SandBox
+# Ignore STM_SandBox except the ones specify below with !
+STM_SandBox/*
+!STM_SandBox/exercise_3_blink_led_while_button_is_pressed
 
 # Ignore all text files
 #*.txt
