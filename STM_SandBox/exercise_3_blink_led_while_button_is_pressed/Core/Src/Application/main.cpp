@@ -24,10 +24,11 @@ int main(void) {
 	while (1) {
 		if (Button::is_pressed())
 		{
-			if (Time::ticks_diff(time_to_toggle_led, Time::ticks_ms()) <= 0)
+			auto const now = Time::ticks_ms();
+			if (Time::ticks_diff(time_to_toggle_led, now) <= 0)
 			{
 				Led::toggle();
-				time_to_toggle_led = Time::ticks_add(Time::ticks_ms(), 200);
+				time_to_toggle_led = Time::ticks_add(now, 200);
 			}
 		}
 	}
