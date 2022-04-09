@@ -27,7 +27,7 @@ int main(void) {
 			if (Time::ticks_diff(time_to_toggle_led, Time::ticks_ms()) <= 0)
 			{
 				Led::toggle();
-				time_to_toggle_led = Time::ticks_add(time_to_toggle_led, 200);
+				time_to_toggle_led = Time::ticks_add(Time::ticks_ms(), 200);
 			}
 		}
 	}
