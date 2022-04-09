@@ -5,7 +5,7 @@
  *      Author: szerpadiaz
  */
 
-#include <machine/Machine.h>
+#include <Machine/Machine.h>
 #include "main.h"
 
 void Machine::init()

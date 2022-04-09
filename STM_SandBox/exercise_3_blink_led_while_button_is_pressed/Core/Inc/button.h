@@ -8,8 +8,6 @@
 #ifndef INC_BUTTON_H_
 #define INC_BUTTON_H_
 
-#include <stdbool.h>
-
 class Button final {
 public:
 	static void init();
