@@ -6,14 +6,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../Core/Src/Application/button.cpp \
+../Core/Src/Application/led.cpp \
 ../Core/Src/Application/main.cpp 
 
 OBJS += \
 ./Core/Src/Application/button.o \
+./Core/Src/Application/led.o \
 ./Core/Src/Application/main.o 
 
 CPP_DEPS += \
 ./Core/Src/Application/button.d \
+./Core/Src/Application/led.d \
 ./Core/Src/Application/main.d 
 
 
@@ -24,7 +27,7 @@ Core/Src/Application/%.o Core/Src/Application/%.su: ../Core/Src/Application/%.cp
 clean: clean-Core-2f-Src-2f-Application
 
 clean-Core-2f-Src-2f-Application:
-	-$(RM) ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
+	-$(RM) ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/led.d ./Core/Src/Application/led.o ./Core/Src/Application/led.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
 
 .PHONY: clean-Core-2f-Src-2f-Application
 

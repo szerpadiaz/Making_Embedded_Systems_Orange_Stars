@@ -9,7 +9,7 @@
 #include <Application/button.h>
 #include <Application/led.h>
 #include <Machine/machine.h>
-#include "main.h"
+#include <Machine/time.h>
 
 int main(void) {
 
@@ -19,12 +19,16 @@ int main(void) {
 
 	Button::init();
 
-	uint32_t time_to_toggle_led = HAL_GetTick();
+	auto time_to_toggle_led = Time::ticks_ms();
 
 	while (1) {
-		if (Button::is_pressed() && (HAL_GetTick() > time_to_toggle_led)) {
-			Led::toggle();
-			time_to_toggle_led += 200;
+		if (Button::is_pressed())
+		{
+			if (Time::ticks_diff(time_to_toggle_led, Time::ticks_ms()) <= 0)
+			{
+				Led::toggle();
+				time_to_toggle_led = Time::ticks_add(time_to_toggle_led, 200);
+			}
 		}
 	}
 }

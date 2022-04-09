@@ -6,15 +6,15 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../Core/Src/Machine/Machine.cpp \
-../Core/Src/Machine/led.cpp 
+../Core/Src/Machine/time.cpp 
 
 OBJS += \
 ./Core/Src/Machine/Machine.o \
-./Core/Src/Machine/led.o 
+./Core/Src/Machine/time.o 
 
 CPP_DEPS += \
 ./Core/Src/Machine/Machine.d \
-./Core/Src/Machine/led.d 
+./Core/Src/Machine/time.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +24,7 @@ Core/Src/Machine/%.o Core/Src/Machine/%.su: ../Core/Src/Machine/%.cpp Core/Src/M
 clean: clean-Core-2f-Src-2f-Machine
 
 clean-Core-2f-Src-2f-Machine:
-	-$(RM) ./Core/Src/Machine/Machine.d ./Core/Src/Machine/Machine.o ./Core/Src/Machine/Machine.su ./Core/Src/Machine/led.d ./Core/Src/Machine/led.o ./Core/Src/Machine/led.su
+	-$(RM) ./Core/Src/Machine/Machine.d ./Core/Src/Machine/Machine.o ./Core/Src/Machine/Machine.su ./Core/Src/Machine/time.d ./Core/Src/Machine/time.o ./Core/Src/Machine/time.su
 
 .PHONY: clean-Core-2f-Src-2f-Machine
 

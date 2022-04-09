@@ -4,9 +4,8 @@
  *  Created on: Apr 9, 2022
  *      Author: szerpadiaz
  */
-
-#include <Machine/machine.h>
 #include "Application/led.h"
+#include <Machine/machine.h>
 #include "main.h"
 
 void Led::init() {
@@ -26,10 +25,10 @@ void Led::on()
 
 void Led::off()
 {
-	HAL_GPIO_TogglePin(GPIOD, LD4_Pin);
+	HAL_GPIO_WritePin(GPIOD, LD4_Pin, GPIO_PIN_RESET);
 }
 
 void Led::toggle()
 {
-	HAL_GPIO_WritePin(GPIOD, LD4_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_TogglePin(GPIOD, LD4_Pin);
 }
