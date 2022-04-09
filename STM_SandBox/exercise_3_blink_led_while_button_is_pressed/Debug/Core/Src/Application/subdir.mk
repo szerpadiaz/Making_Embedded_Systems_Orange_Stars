@@ -5,26 +5,26 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Core/Src/Machine/Machine.cpp \
-../Core/Src/Machine/led.cpp 
+../Core/Src/Application/button.cpp \
+../Core/Src/Application/main.cpp 
 
 OBJS += \
-./Core/Src/Machine/Machine.o \
-./Core/Src/Machine/led.o 
+./Core/Src/Application/button.o \
+./Core/Src/Application/main.o 
 
 CPP_DEPS += \
-./Core/Src/Machine/Machine.d \
-./Core/Src/Machine/led.d 
+./Core/Src/Application/button.d \
+./Core/Src/Application/main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Core/Src/Machine/%.o Core/Src/Machine/%.su: ../Core/Src/Machine/%.cpp Core/Src/Machine/subdir.mk
+Core/Src/Application/%.o Core/Src/Application/%.su: ../Core/Src/Application/%.cpp Core/Src/Application/subdir.mk
 	arm-none-eabi-g++ "$<" -mcpu=cortex-m4 -std=gnu++14 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 
-clean: clean-Core-2f-Src-2f-Machine
+clean: clean-Core-2f-Src-2f-Application
 
-clean-Core-2f-Src-2f-Machine:
-	-$(RM) ./Core/Src/Machine/Machine.d ./Core/Src/Machine/Machine.o ./Core/Src/Machine/Machine.su ./Core/Src/Machine/led.d ./Core/Src/Machine/led.o ./Core/Src/Machine/led.su
+clean-Core-2f-Src-2f-Application:
+	-$(RM) ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
 
-.PHONY: clean-Core-2f-Src-2f-Machine
+.PHONY: clean-Core-2f-Src-2f-Application
 

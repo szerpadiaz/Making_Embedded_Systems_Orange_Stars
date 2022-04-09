@@ -5,9 +5,8 @@
  *      Author: szerpadiaz
  */
 
+#include "Application/led.h"
 #include <Machine/Machine.h>
-#include "led.h"
-
 #include "main.h"
 
 void Led::init() {

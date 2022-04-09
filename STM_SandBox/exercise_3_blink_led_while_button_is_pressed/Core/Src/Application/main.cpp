@@ -1,27 +1,15 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : main.c
+  * @file           : main.cpp
   * @brief          : Main program body
   ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
   ******************************************************************************
   */
 
-
-#include "main.h"
-
-#include <Button.h>
-#include <Led.h>
+#include <Application/Button.h>
+#include <Application/Led.h>
 #include <Machine/Machine.h>
+#include "main.h"
 
 int main(void) {
 
