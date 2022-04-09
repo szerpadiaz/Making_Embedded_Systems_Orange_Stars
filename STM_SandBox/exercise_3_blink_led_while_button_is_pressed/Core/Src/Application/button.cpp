@@ -5,8 +5,8 @@
  *      Author: szerpadiaz
  */
 
-#include "Application/Button.h"
-#include <Machine/Machine.h>
+#include <Machine/machine.h>
+#include "Application/button.h"
 #include "main.h"
 
 volatile uint32_t last_changed_time = 0;

@@ -6,9 +6,9 @@
   ******************************************************************************
   */
 
-#include <Application/Button.h>
-#include <Application/Led.h>
-#include <Machine/Machine.h>
+#include <Application/button.h>
+#include <Application/led.h>
+#include <Machine/machine.h>
 #include "main.h"
 
 int main(void) {
