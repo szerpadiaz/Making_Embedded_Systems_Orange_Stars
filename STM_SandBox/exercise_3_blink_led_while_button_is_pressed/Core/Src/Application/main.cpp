@@ -11,6 +11,8 @@
 #include <Machine/machine.h>
 #include <Machine/time.h>
 
+static bool is_time_to_toggle_led();
+
 int main(void) {
 
 	Machine::init();
@@ -19,19 +21,22 @@ int main(void) {
 
 	Button::init();
 
-	auto time_to_toggle_led = Time::ticks_ms();
-
 	while (1) {
-		if (Button::is_pressed())
-		{
-			auto const now = Time::ticks_ms();
-			if (Time::ticks_diff(time_to_toggle_led, now) <= 0)
-			{
-				Led::toggle();
-				time_to_toggle_led = Time::ticks_add(now, 200);
-			}
+		if (Button::is_pressed() && is_time_to_toggle_led()) {
+			Led::toggle();
 		}
 	}
 }
 
 
+static bool is_time_to_toggle_led() {
+	static uint32_t time_to_toggle_led = 0;
+
+	auto const now = Time::ticks_ms();
+	if (Time::ticks_diff(time_to_toggle_led, now) > 0) {
+		return false;
+	} else {
+		time_to_toggle_led = Time::ticks_add(now, 200);
+		return true;
+	}
+}
