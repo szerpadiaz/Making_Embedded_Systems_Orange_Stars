@@ -6,7 +6,7 @@
  */
 
 #include <Machine/machine.h>
-#include "main.h"
+#include <Machine/processor_header.h>
 
 void Machine::init()
 {

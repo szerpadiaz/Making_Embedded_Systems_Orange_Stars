@@ -5,8 +5,7 @@
  *      Author: szerpadiaz
  */
 #include <Machine/time.h>
-#include <Machine/machine.h>
-#include "main.h"
+#include <Machine/processor_header.h>
 
 //Time depends on in HAL_InitTick().
 // HAL_InitTick() is called in HAL_Init() which is called in Machine::init()
