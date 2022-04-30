@@ -59,3 +59,16 @@ void Machine::error_handler(void)
   {
   }
 }
+
+/**
+  * Initializes the Global MSP.
+  * This function is called by HAL_Init() which is called above in Machine::init()
+  */
+void HAL_MspInit(void)
+{
+
+  __HAL_RCC_SYSCFG_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
+
+  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
+}

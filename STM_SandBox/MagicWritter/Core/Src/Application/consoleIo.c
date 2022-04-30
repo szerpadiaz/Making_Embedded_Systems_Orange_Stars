@@ -23,7 +23,6 @@ eConsoleError ConsoleIoInit(void)
     
   if(HAL_UART_Init(&UartHandle) != HAL_OK)
   {
-   //HAL_UART_Init() calls: HAL_UART_MspInit() defined below
    return CONSOLE_ERROR;
   }
 
@@ -61,6 +60,11 @@ eConsoleError ConsoleIoSendString(const char *buffer)
 	return CONSOLE_SUCCESS;
 }
 
+/**
+ * UART MSP Initialization
+ * This function is called by HAL_UART_Init() which is called above in ConsoleIoInit()
+ */
+//
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {  
   GPIO_InitTypeDef  GPIO_InitStruct;
@@ -90,6 +94,10 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
 }
 
+/**
+  * UART MSP De-Initialization
+  *
+  */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
   /*##-1- Reset peripherals ##################################################*/
