@@ -4,6 +4,7 @@
 # Ignore STM_SandBox except the ones specify below with !
 STM_SandBox/*
 !STM_SandBox/exercise_3_blink_led_while_button_is_pressed
+!STM_SandBox/MagicWritter
 *.d
 *.o
 *.su
