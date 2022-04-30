@@ -8,8 +8,8 @@
 
 #include <Application/button.h>
 #include <Application/led.h>
+#include <Machine/m_time.h>
 #include <Machine/machine.h>
-#include <Machine/time.h>
 
 static bool is_time_to_toggle_led();
 

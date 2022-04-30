@@ -4,7 +4,7 @@
  *  Created on: Apr 9, 2022
  *      Author: szerpadiaz
  */
-#include <Machine/time.h>
+#include <Machine/m_time.h>
 #include <Machine/processor_header.h>
 
 //Time depends on in HAL_InitTick().

@@ -5,8 +5,8 @@
  *      Author: szerpadiaz
  */
 
-#ifndef INC_MACHINE_TIME_H_
-#define INC_MACHINE_TIME_H_
+#ifndef INC_MACHINE_M_TIME_H_
+#define INC_MACHINE_M_TIME_H_
 
 #include <stdint.h>
 
@@ -18,4 +18,4 @@ public:
 };
 
 
-#endif /* INC_MACHINE_TIME_H_ */
+#endif /* INC_MACHINE_M_TIME_H_ */
