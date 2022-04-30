@@ -11,11 +11,10 @@
 #include <Machine/m_time.h>
 #include <Machine/machine.h>
 
-#include <Application/consoleIo.h>
+#include <Application/console.h>
 
 static bool is_time_to_toggle_led();
 
-static char mReceiveBuffer[4];
 
 int main(void) {
 
@@ -25,16 +24,14 @@ int main(void) {
 
 	Button::init();
 
-	ConsoleIoInit();
+	ConsoleInit();
 
 	while (1) {
 		if (Button::is_pressed() && is_time_to_toggle_led()) {
 			Led::toggle();
 		}
 
-
-		uint32_t readLength;
-		ConsoleIoReceive((uint8_t*)(&mReceiveBuffer[0]), 4, &readLength);
+		ConsoleProcess();
 	}
 }
 
