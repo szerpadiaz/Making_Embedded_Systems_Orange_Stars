@@ -6,20 +6,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/Application/console.c \
-../Core/Src/Application/consoleCommands.c \
 ../Core/Src/Application/consoleIo.c 
 
 CPP_SRCS += \
+../Core/Src/Application/User_control.cpp \
 ../Core/Src/Application/button.cpp \
+../Core/Src/Application/consoleCommands.cpp \
 ../Core/Src/Application/led.cpp \
 ../Core/Src/Application/main.cpp 
 
 C_DEPS += \
 ./Core/Src/Application/console.d \
-./Core/Src/Application/consoleCommands.d \
 ./Core/Src/Application/consoleIo.d 
 
 OBJS += \
+./Core/Src/Application/User_control.o \
 ./Core/Src/Application/button.o \
 ./Core/Src/Application/console.o \
 ./Core/Src/Application/consoleCommands.o \
@@ -28,7 +29,9 @@ OBJS += \
 ./Core/Src/Application/main.o 
 
 CPP_DEPS += \
+./Core/Src/Application/User_control.d \
 ./Core/Src/Application/button.d \
+./Core/Src/Application/consoleCommands.d \
 ./Core/Src/Application/led.d \
 ./Core/Src/Application/main.d 
 
@@ -42,7 +45,7 @@ Core/Src/Application/%.o Core/Src/Application/%.su: ../Core/Src/Application/%.c 
 clean: clean-Core-2f-Src-2f-Application
 
 clean-Core-2f-Src-2f-Application:
-	-$(RM) ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/console.d ./Core/Src/Application/console.o ./Core/Src/Application/console.su ./Core/Src/Application/consoleCommands.d ./Core/Src/Application/consoleCommands.o ./Core/Src/Application/consoleCommands.su ./Core/Src/Application/consoleIo.d ./Core/Src/Application/consoleIo.o ./Core/Src/Application/consoleIo.su ./Core/Src/Application/led.d ./Core/Src/Application/led.o ./Core/Src/Application/led.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
+	-$(RM) ./Core/Src/Application/User_control.d ./Core/Src/Application/User_control.o ./Core/Src/Application/User_control.su ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/console.d ./Core/Src/Application/console.o ./Core/Src/Application/console.su ./Core/Src/Application/consoleCommands.d ./Core/Src/Application/consoleCommands.o ./Core/Src/Application/consoleCommands.su ./Core/Src/Application/consoleIo.d ./Core/Src/Application/consoleIo.o ./Core/Src/Application/consoleIo.su ./Core/Src/Application/led.d ./Core/Src/Application/led.o ./Core/Src/Application/led.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
 
 .PHONY: clean-Core-2f-Src-2f-Application
 

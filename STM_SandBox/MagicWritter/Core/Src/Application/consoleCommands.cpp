@@ -12,7 +12,7 @@
 #include <Application/consoleIo.h>
 
 #include <Application/version.h>
-
+#include <Application/User_control.h>
 
 #define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
 
@@ -24,6 +24,9 @@ static eCommandResult_T ConsoleCommandHelp(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
 
+static eCommandResult_T ConsoleCommandEnableBlinkingLed(const char buffer[]);
+static eCommandResult_T ConsoleCommandDisableBlinkingLed(const char buffer[]);
+
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
     {";", &ConsoleCommandComment, HELP("Comment! You do need a space after the semicolon. ")},
@@ -31,10 +34,10 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"ver", &ConsoleCommandVer, HELP("Get the version string")},
     {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
-
+	{"enableBlinking", &ConsoleCommandEnableBlinkingLed, HELP("Enable blinking LED")},
+	{"disableBlinking", &ConsoleCommandDisableBlinkingLed, HELP("Disable blinking LED")},
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
-
 
 static eCommandResult_T ConsoleCommandComment(const char buffer[])
 {
@@ -114,3 +117,16 @@ const sConsoleCommandTable_T* ConsoleCommandsGetTable(void)
 	return (mConsoleCommandTable);
 }
 
+static eCommandResult_T ConsoleCommandEnableBlinkingLed(const char buffer[]) {
+	IGNORE_UNUSED_VARIABLE(buffer);
+	User_control_enable_blinking_led();
+	ConsoleIoSendString(STR_ENDLINE);
+	return COMMAND_SUCCESS;
+}
+
+static eCommandResult_T ConsoleCommandDisableBlinkingLed(const char buffer[]) {
+	IGNORE_UNUSED_VARIABLE(buffer);
+	User_control_disable_blinking_led();
+	ConsoleIoSendString(STR_ENDLINE);
+	return COMMAND_SUCCESS;
+}
