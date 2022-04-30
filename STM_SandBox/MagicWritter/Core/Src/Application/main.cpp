@@ -30,8 +30,8 @@ int main(void) {
 	ConsoleInit();
 
 	while (1) {
-		bool toggle_led = (Button::is_pressed() || User_control_is_blinking_led_enable()) && is_time_to_toggle_led();
-		if (toggle_led) {
+		const bool toggle_led_enabled = Button::is_pressed() || User_control_is_blinking_led_enable();
+		if (toggle_led_enabled && is_time_to_toggle_led()) {
 			Led::toggle();
 		}
 
