@@ -1,10 +1,10 @@
 /**
-  ******************************************************************************
-  * @file           : main.cpp
-  * @brief          : Program to blink an LED while a push-button is pressed
-  ******************************************************************************
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.cpp
+ * @brief          : Program to blink an LED while a push-button is pressed
+ ******************************************************************************
+ ******************************************************************************
+ */
 
 #include <Application/button.h>
 #include <Application/led.h>
@@ -13,9 +13,9 @@
 
 #include <Application/console.h>
 #include <Application/User_control.h>
+#include <Application/gui.h>
 
 static bool is_time_to_toggle_led();
-
 
 int main(void) {
 
@@ -29,16 +29,37 @@ int main(void) {
 
 	ConsoleInit();
 
+	Gui::init();
+
 	while (1) {
-		const bool toggle_led_enabled = Button::is_pressed() || User_control_is_blinking_led_enable();
+		const bool toggle_led_enabled = Button::is_pressed()
+				|| User_control_is_blinking_led_enable();
 		if (toggle_led_enabled && is_time_to_toggle_led()) {
 			Led::toggle();
 		}
 
 		ConsoleProcess();
+
+		auto gui_event = Gui::get_touch_event();
+
+		switch (std::get<0>(gui_event)) {
+		case Gui_event_t::ON_PAINTING_AREA:
+			// store point to BMP image
+			// auto x = std::get<1>(gui_event);
+			// auto y = std::get<2>(gui_event);
+			break;
+		case Gui_event_t::ON_CLEAR_BUTTON:
+			Gui::clear_painting_area();
+			break;
+		case Gui_event_t::ON_CHECK_BUTTON:
+			// check BMP image using ML model
+			Gui::draw_celebration_animation();
+			break;
+		default:
+			break;
+		}
 	}
 }
-
 
 static bool is_time_to_toggle_led() {
 	static uint32_t time_to_toggle_led = 0;
