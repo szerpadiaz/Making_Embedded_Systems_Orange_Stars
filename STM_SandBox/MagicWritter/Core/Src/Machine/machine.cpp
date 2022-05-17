@@ -15,6 +15,12 @@ void Machine::init()
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOG_CLK_ENABLE();
 
+	CRC_HandleTypeDef hcrc;
+	hcrc.Instance = CRC;
+	if (HAL_CRC_Init(&hcrc) != HAL_OK)
+	{
+		Machine::error_handler();
+	}
 }
 
 void Machine::configure_clock(void)
@@ -71,4 +77,21 @@ void HAL_MspInit(void)
   __HAL_RCC_PWR_CLK_ENABLE();
 
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
+}
+
+void HAL_CRC_MspInit(CRC_HandleTypeDef* hcrc)
+{
+  if(hcrc->Instance==CRC)
+  {
+    __HAL_RCC_CRC_CLK_ENABLE();
+
+  }
+}
+
+void HAL_CRC_MspDeInit(CRC_HandleTypeDef* hcrc)
+{
+  if(hcrc->Instance==CRC)
+  {
+    __HAL_RCC_CRC_CLK_DISABLE();
+  }
 }
