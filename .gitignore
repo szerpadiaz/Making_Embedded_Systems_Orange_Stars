@@ -12,6 +12,10 @@ STM_SandBox/*
 *.list
 *.map
 
+
+# MagicWriter: Ignore training-data
+STM_SandBox/MagicWritter/Utilities/Training_data_digits/*
+
 # Ignore all text files
 #*.txt
 
