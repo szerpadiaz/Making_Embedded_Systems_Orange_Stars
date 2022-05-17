@@ -14,9 +14,33 @@
 #define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
 
-static uint32_t selected_symbol = 0;
-static uint32_t radius = 12;
-static uint32_t pencil_color = LCD_COLOR_DARKGREEN;
+constexpr uint32_t GUI_LAYOUT_LINE_COLOR = LCD_COLOR_BLACK;
+constexpr uint32_t PAINTING_AREA_WIDTH = 224;
+constexpr uint32_t PAINTING_AREA_HIGHT = 224;
+constexpr uint32_t PAINTING_AREA_X = 8;
+constexpr uint32_t PAINTING_AREA_Y = 55;
+constexpr uint32_t PEN_COLOR = LCD_COLOR_DARKGREEN;
+constexpr uint32_t PEN_RADIUS = 8;
+
+constexpr uint32_t CLEAR_BUTTON_RADIUS = 20;
+constexpr uint32_t CLEAR_BUTTON_X = 40;
+constexpr uint32_t CLEAR_BUTTON_Y = 25;
+constexpr uint32_t CLEAR_BUTTON_COLOR = LCD_COLOR_RED;
+
+constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_WIDTH = 28;
+constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_HIGHT = 28;
+constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_X = 120 - SELECTED_SYMBOL_DISPLAY_AREA_WIDTH - 4;
+constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_Y = 12;
+
+constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_WIDTH = 28;
+constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_HIGHT = 28;
+constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_X = 120 + 4;
+constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_Y = 12;
+
+constexpr uint32_t OK_BUTTON_RADIUS = 20;
+constexpr uint32_t OK_BUTTON_X = 240 - 40;
+constexpr uint32_t OK_BUTTON_Y = 25;
+constexpr uint32_t OK_BUTTON_COLOR = LCD_COLOR_GREEN;
 
 void Gui::init() {
 
@@ -52,12 +76,12 @@ Gui::event_info_t Gui::get_touch_event() {
 		print_xy_in_info_area(x, y);
 
 		if (is_position_in_painting_area(x, y)) {
-			BSP_LCD_FillCircle(x, y, radius);
+			update_painting(x, y);
 			return {Gui_event_t::ON_PAINTING_AREA, x, y};
 		} else if (is_position_in_clear_button(x, y)) {
-			//clear_painting_area();
+			//clear_painting();
 			return {Gui_event_t::ON_CLEAR_BUTTON, 0, 0};
-		} else if (is_position_in_check_button(x, y)) {
+		} else if (is_position_in_ok_button(x, y)) {
 			//draw_celebration_animation();
 			return {Gui_event_t::ON_CHECK_BUTTON, 0, 0};
 		}
@@ -69,94 +93,132 @@ void Gui::draw_menu(void) {
 	/* Draw background Layer */
 	BSP_LCD_SelectLayer(0);
 	BSP_LCD_Clear(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_FillRect(0, 0, BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
 	draw_clear_button();
-	draw_symbol_display_area();
-	draw_check_button();
+	draw_selected_symbol_display_area(0);
+	draw_painting_symbol_display_area();
+	draw_ok_button();
 	draw_painting_area();
 	draw_info_area();
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(pencil_color);
+	BSP_LCD_SetTextColor(PEN_COLOR);
 }
 
 void Gui::draw_painting_area() {
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(10, 50, BSP_LCD_GetXSize() - 20, BSP_LCD_GetYSize() - 75);
 
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DrawRect(15, 55, BSP_LCD_GetXSize() - 30, BSP_LCD_GetYSize() - 85);
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(PAINTING_AREA_X, PAINTING_AREA_Y, PAINTING_AREA_WIDTH, PAINTING_AREA_HIGHT);
+
+	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
+	BSP_LCD_DrawRect(PAINTING_AREA_X, PAINTING_AREA_Y, PAINTING_AREA_WIDTH, PAINTING_AREA_HIGHT);
 }
 
 bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
-	const bool x_in_rect = (x > 15 + radius
-			&& x < (15 + BSP_LCD_GetXSize() - 30 - radius));
-	const bool y_in_rect = (y > 55 + radius
-			&& y < (55 + BSP_LCD_GetYSize() - 85 - radius));
+	const bool x_in_rect = (x > PAINTING_AREA_X + PEN_RADIUS
+			&& x < (PAINTING_AREA_X + PAINTING_AREA_WIDTH - PEN_RADIUS));
+	const bool y_in_rect = (y > PAINTING_AREA_Y + PEN_RADIUS
+			&& y < (PAINTING_AREA_Y + PAINTING_AREA_HIGHT - PEN_RADIUS));
 
 	return (x_in_rect && y_in_rect);
 }
 
-void Gui::clear_painting_area() {
+void Gui::clear_painting() {
+	// draw painting area and display are for painting
+	draw_painting_symbol_display_area();
 	draw_painting_area();
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(pencil_color);
+
+	// make sure to set painting setting again
+	// BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	// BSP_LCD_SetTextColor(PEN_COLOR);
 }
 
 void Gui::draw_clear_button() {
-	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DrawRect(5, 5, 60, 30);
-	BSP_LCD_FillRect(10, 10, 50, 20);
-
-	sFONT *pFont = &Font12;
-	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetBackColor(LCD_COLOR_RED);
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-
-	BSP_LCD_DisplayStringAt(10, 15, (uint8_t*) " CLEAR ", LEFT_MODE);
+	BSP_LCD_SetTextColor(CLEAR_BUTTON_COLOR);
+	BSP_LCD_DrawCircle(CLEAR_BUTTON_X, CLEAR_BUTTON_Y, CLEAR_BUTTON_RADIUS + 2);
+	BSP_LCD_FillCircle(CLEAR_BUTTON_X, CLEAR_BUTTON_Y, CLEAR_BUTTON_RADIUS);
 }
 
 bool Gui::is_position_in_clear_button(uint32_t x, uint32_t y) {
-	const bool x_in_rect = (x > 10 && x < (10 + 50));
-	const bool y_in_rect = (y > 10 && y < (10 + 20));
+	const bool x_in_rect = x > (CLEAR_BUTTON_X - CLEAR_BUTTON_RADIUS) && x < (CLEAR_BUTTON_X + CLEAR_BUTTON_RADIUS);
+	const bool y_in_rect = y > (CLEAR_BUTTON_Y - CLEAR_BUTTON_RADIUS) && y < (CLEAR_BUTTON_Y + CLEAR_BUTTON_RADIUS);
 	return (x_in_rect && y_in_rect);
 }
 
-void Gui::draw_symbol_display_area() {
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DrawCircle(BSP_LCD_GetXSize() / 2, 25, 20);
-	BSP_LCD_FillCircle(BSP_LCD_GetXSize() / 2, 25, 15);
-	update_symbol_display_area();
-}
+void Gui::draw_selected_symbol_display_area(uint32_t ascii_char) {
 
-void Gui::update_symbol_display_area() {
+	// Clear
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(SELECTED_SYMBOL_DISPLAY_AREA_X,
+			SELECTED_SYMBOL_DISPLAY_AREA_Y,
+			SELECTED_SYMBOL_DISPLAY_AREA_WIDTH,
+			SELECTED_SYMBOL_DISPLAY_AREA_HIGHT);
+	// Draw line
+	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
+	BSP_LCD_DrawRect(SELECTED_SYMBOL_DISPLAY_AREA_X,
+			SELECTED_SYMBOL_DISPLAY_AREA_Y,
+			SELECTED_SYMBOL_DISPLAY_AREA_WIDTH,
+			SELECTED_SYMBOL_DISPLAY_AREA_HIGHT);
+
+	// Print ascii symbol
 	sFONT *pFont = &Font20;
 	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetTextColor(pencil_color);
+	BSP_LCD_SetTextColor(PEN_COLOR);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayChar(BSP_LCD_GetXSize() / 2 - 6, 17, selected_symbol + 48);
+	BSP_LCD_DisplayChar(SELECTED_SYMBOL_DISPLAY_AREA_X + 8,
+			SELECTED_SYMBOL_DISPLAY_AREA_Y + 6, ascii_char);
 }
 
-void Gui::draw_check_button() {
-	BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-	BSP_LCD_DrawRect(BSP_LCD_GetXSize() - 65, 5, 60, 30);
-	BSP_LCD_FillRect(BSP_LCD_GetXSize() - 60, 10, 50, 20);
+void Gui::draw_painting_symbol_display_area() {
 
-	sFONT *pFont = &Font12;
-	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetBackColor(LCD_COLOR_GREEN);
+	// Clear
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(PAINTING_SYMBOL_DISPLAY_AREA_X,
+			PAINTING_SYMBOL_DISPLAY_AREA_Y,
+			PAINTING_SYMBOL_DISPLAY_AREA_WIDTH,
+			PAINTING_SYMBOL_DISPLAY_AREA_HIGHT);
 
-	BSP_LCD_DisplayStringAt(BSP_LCD_GetXSize() - 10, 15, (uint8_t*) " DONE ",
-			RIGHT_MODE);
+	// Draw line
+	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
+	BSP_LCD_DrawRect(PAINTING_SYMBOL_DISPLAY_AREA_X,
+			PAINTING_SYMBOL_DISPLAY_AREA_Y,
+			PAINTING_SYMBOL_DISPLAY_AREA_WIDTH,
+			PAINTING_SYMBOL_DISPLAY_AREA_HIGHT);
 }
 
-bool Gui::is_position_in_check_button(uint32_t x, uint32_t y) {
-	const bool x_in_rect = (x > (BSP_LCD_GetXSize() - 60))
-			&& (x < (BSP_LCD_GetXSize() - 60 + 50));
-	const bool y_in_rect = (y > 10 && y < (10 + 20));
+void Gui::update_painting(uint32_t x, uint32_t y)
+{
+	// draw point in painting area
+	BSP_LCD_FillCircle(x, y, PEN_RADIUS);
+
+	// convert point in painting area to an offset (the source offset)
+	auto src_offset_x = x - PAINTING_AREA_X;
+	auto src_offset_y = y - PAINTING_AREA_Y;
+
+	// calculate offset in display area (the destination offset)
+	auto const rescale_ratio = 8;
+	auto dst_offset_x = src_offset_x / rescale_ratio;
+	auto dst_offset_y = src_offset_y / rescale_ratio;
+
+	// calculate point in display area
+	auto dst_x = dst_offset_x + PAINTING_SYMBOL_DISPLAY_AREA_X;
+	auto dst_y = dst_offset_y + PAINTING_SYMBOL_DISPLAY_AREA_Y;
+
+	// draw point in display area
+	BSP_LCD_DrawPixel(dst_x, dst_y, PEN_COLOR);
+}
+
+void Gui::draw_ok_button() {
+	BSP_LCD_SetTextColor(OK_BUTTON_COLOR);
+	BSP_LCD_DrawCircle(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_RADIUS + 2);
+	BSP_LCD_FillCircle(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_RADIUS);
+}
+
+bool Gui::is_position_in_ok_button(uint32_t x, uint32_t y) {
+	const bool x_in_rect = x > (OK_BUTTON_X - OK_BUTTON_RADIUS) && x < (OK_BUTTON_X + OK_BUTTON_RADIUS);
+	const bool y_in_rect = y > (OK_BUTTON_Y - OK_BUTTON_RADIUS) && y < (OK_BUTTON_Y + OK_BUTTON_RADIUS);
 	return (x_in_rect && y_in_rect);
 }
 
@@ -208,7 +270,7 @@ void Gui::print_xy_in_info_area(uint32_t pos_x, uint32_t pos_y) {
 			pos_y);
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(pencil_color);
+	BSP_LCD_SetTextColor(PEN_COLOR);
 }
 
 void Gui::print_number_at_position(uint32_t pos_x, uint32_t pos_y,

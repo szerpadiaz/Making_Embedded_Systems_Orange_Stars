@@ -16,6 +16,7 @@
 #include <Application/gui.h>
 
 static bool is_time_to_toggle_led();
+static uint32_t selected_symbol = 48; // digits from 0 to 9 coded in ascii
 
 int main(void) {
 
@@ -30,6 +31,7 @@ int main(void) {
 	ConsoleInit();
 
 	Gui::init();
+	Gui::draw_selected_symbol_display_area(selected_symbol);
 
 	while (1) {
 		const bool toggle_led_enabled = Button::is_pressed()
@@ -49,7 +51,7 @@ int main(void) {
 			// auto y = std::get<2>(gui_event);
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
-			Gui::clear_painting_area();
+			Gui::clear_painting();
 			break;
 		case Gui_event_t::ON_CHECK_BUTTON:
 			// check BMP image using ML model
