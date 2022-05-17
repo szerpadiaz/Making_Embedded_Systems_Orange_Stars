@@ -67,6 +67,7 @@ int main(void) {
 			Gui::clear_painting();
 			increment_selected_symbol();
 			Gui::draw_selected_symbol_display_area(selected_symbol);
+			std::fill_n (raw_image, RAW_IMAGE_LENGTH, 0xffffff);
 
 			if (User_control_is_blinking_led_enable())
 				Led::toggle();
@@ -89,7 +90,7 @@ int main(void) {
 		case Gui_event_t::ON_CHECK_BUTTON:
 			// check BMP image using ML model
 			Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image);
-			Gui::draw_celebration_animation();
+			//Gui::draw_celebration_animation();
 			break;
 		default:
 			break;
