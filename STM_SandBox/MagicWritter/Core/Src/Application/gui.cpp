@@ -42,6 +42,8 @@ constexpr uint32_t OK_BUTTON_X = 240 - 40;
 constexpr uint32_t OK_BUTTON_Y = 25;
 constexpr uint32_t OK_BUTTON_COLOR = LCD_COLOR_GREEN;
 
+constexpr uint32_t RESCLAE_RATIO = 8;
+
 void Gui::init() {
 
 	BSP_LCD_Init();
@@ -77,7 +79,9 @@ Gui::event_info_t Gui::get_touch_event() {
 
 		if (is_position_in_painting_area(x, y)) {
 			update_painting(x, y);
-			return {Gui_event_t::ON_PAINTING_AREA, x, y};
+			uint32_t rescaled_x = (x - PAINTING_AREA_X) / RESCLAE_RATIO;
+			uint32_t rescaled_y = (y - PAINTING_AREA_Y) / RESCLAE_RATIO;
+			return {Gui_event_t::ON_PAINTING_AREA, rescaled_x, rescaled_y};
 		} else if (is_position_in_clear_button(x, y)) {
 			//clear_painting();
 			return {Gui_event_t::ON_CLEAR_BUTTON, 0, 0};
@@ -198,9 +202,8 @@ void Gui::update_painting(uint32_t x, uint32_t y)
 	auto src_offset_y = y - PAINTING_AREA_Y;
 
 	// calculate offset in display area (the destination offset)
-	auto const rescale_ratio = 8;
-	auto dst_offset_x = src_offset_x / rescale_ratio;
-	auto dst_offset_y = src_offset_y / rescale_ratio;
+	auto dst_offset_x = src_offset_x / RESCLAE_RATIO;
+	auto dst_offset_y = src_offset_y / RESCLAE_RATIO;
 
 	// calculate point in display area
 	auto dst_x = dst_offset_x + PAINTING_SYMBOL_DISPLAY_AREA_X;

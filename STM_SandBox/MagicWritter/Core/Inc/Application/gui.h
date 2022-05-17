@@ -15,6 +15,8 @@ enum class Gui_event_t {
 	NONE, ON_PAINTING_AREA, ON_CLEAR_BUTTON, ON_CHECK_BUTTON
 };
 
+
+
 class Gui final {
 	using event_info_t = std::tuple<Gui_event_t, uint32_t, uint32_t>;
 public:

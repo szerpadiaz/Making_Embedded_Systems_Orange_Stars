@@ -52,7 +52,7 @@ char Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image_t * raw
 	signal.get_data = &get_feature_data;
 
     ei_impulse_result_t result = { 0 };
-    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, true);
+    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, false);
     ei_printf("run_classifier returned: %d\n", res);
 
     ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
