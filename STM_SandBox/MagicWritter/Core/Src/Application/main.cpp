@@ -15,8 +15,24 @@
 #include <Application/User_control.h>
 #include <Application/gui.h>
 
-static bool is_time_to_toggle_led();
-static uint32_t selected_symbol = 48; // digits from 0 to 9 coded in ascii
+constexpr auto MIN_SELECTED_SYMBOL = 48;                      // digit 0
+constexpr auto MAX_SELECTED_SYMBOL = MIN_SELECTED_SYMBOL + 9; // digit 9
+static uint32_t selected_symbol = MIN_SELECTED_SYMBOL;
+static void increment_selected_symbol(){
+	selected_symbol = (selected_symbol == MAX_SELECTED_SYMBOL) ? MIN_SELECTED_SYMBOL : (selected_symbol + 1);
+}
+
+static uint32_t time_to_update = 0;
+static bool is_time_to_update_selection() {
+
+	auto const now = Time::ticks_ms();
+	if (Time::ticks_diff(time_to_update, now) > 0) {
+		return false;
+	} else {
+		time_to_update = Time::ticks_add(now, 300);
+		return true;
+	}
+}
 
 int main(void) {
 
@@ -34,10 +50,14 @@ int main(void) {
 	Gui::draw_selected_symbol_display_area(selected_symbol);
 
 	while (1) {
-		const bool toggle_led_enabled = Button::is_pressed()
-				|| User_control_is_blinking_led_enable();
-		if (toggle_led_enabled && is_time_to_toggle_led()) {
-			Led::toggle();
+
+		if (Button::is_pressed() && is_time_to_update_selection()) {
+			Gui::clear_painting();
+			increment_selected_symbol();
+			Gui::draw_selected_symbol_display_area(selected_symbol);
+
+			if (User_control_is_blinking_led_enable())
+				Led::toggle();
 		}
 
 		ConsoleProcess();
@@ -60,17 +80,5 @@ int main(void) {
 		default:
 			break;
 		}
-	}
-}
-
-static bool is_time_to_toggle_led() {
-	static uint32_t time_to_toggle_led = 0;
-
-	auto const now = Time::ticks_ms();
-	if (Time::ticks_diff(time_to_toggle_led, now) > 0) {
-		return false;
-	} else {
-		time_to_toggle_led = Time::ticks_add(now, 200);
-		return true;
 	}
 }

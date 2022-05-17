@@ -10,7 +10,7 @@
 static 	bool blinking_led_enabled;
 
 void User_control_init() {
-	blinking_led_enabled = false;
+	blinking_led_enabled = true;
 }
 
 bool User_control_is_blinking_led_enable() {
