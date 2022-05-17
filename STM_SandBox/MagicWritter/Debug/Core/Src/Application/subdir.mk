@@ -13,6 +13,7 @@ CPP_SRCS += \
 ../Core/Src/Application/button.cpp \
 ../Core/Src/Application/consoleCommands.cpp \
 ../Core/Src/Application/gui.cpp \
+../Core/Src/Application/handwriting_recognizer.cpp \
 ../Core/Src/Application/led.cpp \
 ../Core/Src/Application/main.cpp 
 
@@ -27,6 +28,7 @@ OBJS += \
 ./Core/Src/Application/consoleCommands.o \
 ./Core/Src/Application/consoleIo.o \
 ./Core/Src/Application/gui.o \
+./Core/Src/Application/handwriting_recognizer.o \
 ./Core/Src/Application/led.o \
 ./Core/Src/Application/main.o 
 
@@ -35,6 +37,7 @@ CPP_DEPS += \
 ./Core/Src/Application/button.d \
 ./Core/Src/Application/consoleCommands.d \
 ./Core/Src/Application/gui.d \
+./Core/Src/Application/handwriting_recognizer.d \
 ./Core/Src/Application/led.d \
 ./Core/Src/Application/main.d 
 
@@ -48,7 +51,7 @@ Core/Src/Application/%.o Core/Src/Application/%.su: ../Core/Src/Application/%.c 
 clean: clean-Core-2f-Src-2f-Application
 
 clean-Core-2f-Src-2f-Application:
-	-$(RM) ./Core/Src/Application/User_control.d ./Core/Src/Application/User_control.o ./Core/Src/Application/User_control.su ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/console.d ./Core/Src/Application/console.o ./Core/Src/Application/console.su ./Core/Src/Application/consoleCommands.d ./Core/Src/Application/consoleCommands.o ./Core/Src/Application/consoleCommands.su ./Core/Src/Application/consoleIo.d ./Core/Src/Application/consoleIo.o ./Core/Src/Application/consoleIo.su ./Core/Src/Application/gui.d ./Core/Src/Application/gui.o ./Core/Src/Application/gui.su ./Core/Src/Application/led.d ./Core/Src/Application/led.o ./Core/Src/Application/led.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
+	-$(RM) ./Core/Src/Application/User_control.d ./Core/Src/Application/User_control.o ./Core/Src/Application/User_control.su ./Core/Src/Application/button.d ./Core/Src/Application/button.o ./Core/Src/Application/button.su ./Core/Src/Application/console.d ./Core/Src/Application/console.o ./Core/Src/Application/console.su ./Core/Src/Application/consoleCommands.d ./Core/Src/Application/consoleCommands.o ./Core/Src/Application/consoleCommands.su ./Core/Src/Application/consoleIo.d ./Core/Src/Application/consoleIo.o ./Core/Src/Application/consoleIo.su ./Core/Src/Application/gui.d ./Core/Src/Application/gui.o ./Core/Src/Application/gui.su ./Core/Src/Application/handwriting_recognizer.d ./Core/Src/Application/handwriting_recognizer.o ./Core/Src/Application/handwriting_recognizer.su ./Core/Src/Application/led.d ./Core/Src/Application/led.o ./Core/Src/Application/led.su ./Core/Src/Application/main.d ./Core/Src/Application/main.o ./Core/Src/Application/main.su
 
 .PHONY: clean-Core-2f-Src-2f-Application
 
