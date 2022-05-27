@@ -43,6 +43,8 @@ static bool is_time_to_update_selection() {
 	}
 }
 
+constexpr auto SET_PIXEL = 1;
+constexpr auto CLEAR_PIXEL = 0;
 int main(void) {
 
 	Machine::init();
@@ -59,7 +61,7 @@ int main(void) {
 	Gui::draw_selected_symbol_display_area(selected_symbol);
 
 	Handwriting_recognizer::init();
-	std::fill_n (raw_image, RAW_IMAGE_LENGTH, 0xffffff);
+	std::fill_n (raw_image, RAW_IMAGE_LENGTH, CLEAR_PIXEL);
 
 	while (1) {
 
@@ -67,7 +69,7 @@ int main(void) {
 			Gui::clear_painting();
 			increment_selected_symbol();
 			Gui::draw_selected_symbol_display_area(selected_symbol);
-			std::fill_n (raw_image, RAW_IMAGE_LENGTH, 0xffffff);
+			std::fill_n (raw_image, RAW_IMAGE_LENGTH, CLEAR_PIXEL);
 
 			if (User_control_is_blinking_led_enable())
 				Led::toggle();
@@ -81,11 +83,11 @@ int main(void) {
 
 		switch (std::get<0>(gui_event)) {
 		case Gui_event_t::ON_PAINTING_AREA:
-			raw_image[y*28 + x] = 0;
+			raw_image[y*28 + x] = SET_PIXEL;
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
 			Gui::clear_painting();
-			std::fill_n (raw_image, RAW_IMAGE_LENGTH, 0xffffff);
+			std::fill_n (raw_image, RAW_IMAGE_LENGTH, CLEAR_PIXEL);
 			break;
 		case Gui_event_t::ON_CHECK_BUTTON:
 			// check BMP image using ML model
