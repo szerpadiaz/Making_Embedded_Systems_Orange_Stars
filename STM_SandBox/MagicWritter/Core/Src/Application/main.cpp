@@ -43,7 +43,7 @@ static bool is_time_to_update_selection() {
 	}
 }
 
-constexpr auto SET_PIXEL = 1;
+constexpr auto SET_PIXEL = 0xffffff; //1, 0xffffff
 constexpr auto CLEAR_PIXEL = 0;
 int main(void) {
 
