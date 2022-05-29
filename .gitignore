@@ -11,6 +11,7 @@ STM_SandBox/*
 *.elf
 *.list
 *.map
+!STM_SandBox/MagicWritter/Debug/MagicWritter.map
 
 
 # MagicWriter: Ignore training-data
