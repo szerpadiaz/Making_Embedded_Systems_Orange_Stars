@@ -54,10 +54,7 @@ char Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image_t * raw
     ei_impulse_result_t result = { 0 };
     EI_IMPULSE_ERROR res = run_classifier(&signal, &result, false);
     if (res != 0)
-    	ei_printf("ERROR %d returned by run_classifier",res);
-
-    //ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
-    //    result.timing.dsp, result.timing.classification, result.timing.anomaly);
+    	ei_printf("ERROR %d returned by run_classifier \r\n",res);
 
     // Convert prediction to char (so far only digits are supported)
     float max_value = 0;
@@ -75,8 +72,9 @@ char Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image_t * raw
     ei_printf("*********************************\r\n");
     ei_printf("*** CHARACTER DETECTED :  %c ***\r\n", char_detected);
 
-    // Print all labels and their probabilities
-    ei_printf("Probabilities: \r\n");
+    // Print all predictions
+    ei_printf("Predictions (DSP: %d ms., Classification: %d ms.): \r\n",
+        result.timing.dsp, result.timing.classification);
     for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
     	const char * label = result.classification[ix].label;
     	ei_printf("(%s , ", label);
