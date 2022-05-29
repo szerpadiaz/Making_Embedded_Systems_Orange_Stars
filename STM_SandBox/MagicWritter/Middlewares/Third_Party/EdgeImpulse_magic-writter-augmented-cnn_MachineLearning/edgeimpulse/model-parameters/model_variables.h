@@ -28,9 +28,9 @@
 
 const char* ei_classifier_inferencing_categories[] = { "0_zero", "1_one", "2_two", "3_three", "4_four", "5_five", "6_six", "7_seven", "8_eight", "9_nine" };
 
-uint8_t ei_dsp_config_11_axes[] = { 0 };
-const uint32_t ei_dsp_config_11_axes_size = 1;
-ei_dsp_config_image_t ei_dsp_config_11 = {
+uint8_t ei_dsp_config_24_axes[] = { 0 };
+const uint32_t ei_dsp_config_24_axes_size = 1;
+ei_dsp_config_image_t ei_dsp_config_24 = {
     1,
     1,
     "Grayscale"
