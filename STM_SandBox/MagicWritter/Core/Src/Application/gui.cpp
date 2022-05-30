@@ -12,6 +12,7 @@
 #include "stm32f429i_discovery_ts.h"
 
 #include "../../../Utilities/right_answer_img.h"
+#include "../../../Utilities/wrong_answer_img.h"
 
 #define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
@@ -232,6 +233,22 @@ void Gui::draw_right_answer_animation() {
 	//BSP_LCD_Clear(LCD_COLOR_WHITE);
 
 	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)right_answer_img);
+	BSP_LCD_SetLayerVisible(1, ENABLE);
+	HAL_Delay(250);
+	BSP_LCD_SetLayerVisible(1, DISABLE);
+	HAL_Delay(250);
+	BSP_LCD_SetLayerVisible(1, ENABLE);
+	HAL_Delay(1500);
+	BSP_LCD_SetLayerVisible(1, DISABLE);
+
+	BSP_LCD_SelectLayer(0);
+}
+
+void Gui::draw_wrong_answer_animation() {
+	BSP_LCD_SelectLayer(1);
+	//BSP_LCD_Clear(LCD_COLOR_WHITE);
+
+	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)wrong_answer_img);
 	BSP_LCD_SetLayerVisible(1, ENABLE);
 	HAL_Delay(250);
 	BSP_LCD_SetLayerVisible(1, DISABLE);

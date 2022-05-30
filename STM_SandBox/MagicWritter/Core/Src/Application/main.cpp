@@ -86,6 +86,7 @@ int main(void) {
 			raw_image[y*28 + x] = SET_PIXEL;
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
+			Gui::draw_wrong_answer_animation();
 			Gui::clear_painting();
 			std::fill_n (raw_image, RAW_IMAGE_LENGTH, CLEAR_PIXEL);
 			break;
