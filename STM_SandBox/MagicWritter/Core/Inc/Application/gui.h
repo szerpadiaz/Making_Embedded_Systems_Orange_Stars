@@ -24,7 +24,7 @@ public:
 	static event_info_t get_touch_event(void);
 	static void clear_painting();
 	static void draw_selected_symbol_display_area(uint32_t ascii_char);
-	static void draw_celebration_animation();
+	static void draw_right_answer_animation();
 
 private:
 	static void draw_menu(void);

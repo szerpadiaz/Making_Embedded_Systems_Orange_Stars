@@ -11,6 +11,8 @@
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_ts.h"
 
+#include "../../../Utilities/right_answer_img.h"
+
 #define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
 
@@ -225,24 +227,17 @@ bool Gui::is_position_in_ok_button(uint32_t x, uint32_t y) {
 	return (x_in_rect && y_in_rect);
 }
 
-void Gui::draw_celebration_animation() {
+void Gui::draw_right_answer_animation() {
 	BSP_LCD_SelectLayer(1);
-	BSP_LCD_Clear(LCD_COLOR_WHITE);
+	//BSP_LCD_Clear(LCD_COLOR_WHITE);
 
-	sFONT *pFont = &Font20;
-	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-	BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t*) "    WELL DONE!   ", CENTER_MODE);
-	BSP_LCD_DisplayStringAt(0, 50 + pFont->Height,
-			(uint8_t*) "        :)        ", CENTER_MODE);
-
+	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)right_answer_img);
 	BSP_LCD_SetLayerVisible(1, ENABLE);
-	HAL_Delay(1000);
+	HAL_Delay(250);
 	BSP_LCD_SetLayerVisible(1, DISABLE);
-	HAL_Delay(500);
+	HAL_Delay(250);
 	BSP_LCD_SetLayerVisible(1, ENABLE);
-	HAL_Delay(1000);
+	HAL_Delay(1500);
 	BSP_LCD_SetLayerVisible(1, DISABLE);
 
 	BSP_LCD_SelectLayer(0);

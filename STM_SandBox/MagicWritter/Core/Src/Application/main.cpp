@@ -92,7 +92,7 @@ int main(void) {
 		case Gui_event_t::ON_CHECK_BUTTON:
 			// check BMP image using ML model
 			Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image);
-			//Gui::draw_celebration_animation();
+			Gui::draw_right_answer_animation();
 			break;
 		default:
 			break;
