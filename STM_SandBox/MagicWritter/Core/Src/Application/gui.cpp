@@ -30,15 +30,15 @@ constexpr uint32_t CLEAR_BUTTON_X = 40;
 constexpr uint32_t CLEAR_BUTTON_Y = 25;
 constexpr uint32_t CLEAR_BUTTON_COLOR = LCD_COLOR_RED;
 
-constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_WIDTH = 28;
-constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_HIGHT = 28;
-constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_X = 120 - SELECTED_SYMBOL_DISPLAY_AREA_WIDTH - 4;
-constexpr uint32_t SELECTED_SYMBOL_DISPLAY_AREA_Y = 12;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_WIDTH = 28;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_HIGHT = 28;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_X = 120 - SELECTED_CHAR_DISPLAY_AREA_WIDTH - 4;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_Y = 12;
 
-constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_WIDTH = 28;
-constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_HIGHT = 28;
-constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_X = 120 + 4;
-constexpr uint32_t PAINTING_SYMBOL_DISPLAY_AREA_Y = 12;
+constexpr uint32_t RESCLAED_PAINTING_DISPLAY_AREA_WIDTH = 28;
+constexpr uint32_t RESCLAED_PAINTING_DISPLAY_AREA_HIGHT = 28;
+constexpr uint32_t RESCLAED_PAINTING_DISPLAY_AREA_X = 120 + 4;
+constexpr uint32_t RESCLAED_PAINTING_DISPLAY_AREA_Y = 12;
 
 constexpr uint32_t OK_BUTTON_RADIUS = 20;
 constexpr uint32_t OK_BUTTON_X = 240 - 40;
@@ -81,9 +81,9 @@ Gui::event_info_t Gui::get_touch_event() {
 		print_xy_in_info_area(x, y);
 
 		if (is_position_in_painting_area(x, y)) {
-			update_painting(x, y);
-			uint32_t rescaled_x = (x - PAINTING_AREA_X) / RESCLAE_RATIO;
-			uint32_t rescaled_y = (y - PAINTING_AREA_Y) / RESCLAE_RATIO;
+			auto [rescaled_x, rescaled_y] = update_painting_areas(x, y);
+			//uint32_t rescaled_x = (x - PAINTING_AREA_X) / RESCLAE_RATIO;
+			//uint32_t rescaled_y = (y - PAINTING_AREA_Y) / RESCLAE_RATIO;
 			return {Gui_event_t::ON_PAINTING_AREA, rescaled_x, rescaled_y};
 		} else if (is_position_in_clear_button(x, y)) {
 			//clear_painting();
@@ -104,8 +104,8 @@ void Gui::draw_menu(void) {
 	BSP_LCD_FillRect(0, 0, BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
 	draw_clear_button();
-	draw_selected_symbol_display_area(0);
-	draw_painting_symbol_display_area();
+	draw_selected_char_display_area(' ');
+	draw_rescaled_painting_display_area();
 	draw_ok_button();
 	draw_painting_area();
 	draw_info_area();
@@ -132,9 +132,9 @@ bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
 	return (x_in_rect && y_in_rect);
 }
 
-void Gui::clear_painting() {
+void Gui::clear_painting_area() {
 	// draw painting area and display are for painting
-	draw_painting_symbol_display_area();
+	draw_rescaled_painting_display_area();
 	draw_painting_area();
 
 	// make sure to set painting setting again
@@ -154,66 +154,62 @@ bool Gui::is_position_in_clear_button(uint32_t x, uint32_t y) {
 	return (x_in_rect && y_in_rect);
 }
 
-void Gui::draw_selected_symbol_display_area(uint32_t ascii_char) {
+void Gui::draw_selected_char_display_area(char selected_char) {
 
 	// Clear
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(SELECTED_SYMBOL_DISPLAY_AREA_X,
-			SELECTED_SYMBOL_DISPLAY_AREA_Y,
-			SELECTED_SYMBOL_DISPLAY_AREA_WIDTH,
-			SELECTED_SYMBOL_DISPLAY_AREA_HIGHT);
+	BSP_LCD_FillRect(SELECTED_CHAR_DISPLAY_AREA_X,
+			SELECTED_CHAR_DISPLAY_AREA_Y,
+			SELECTED_CHAR_DISPLAY_AREA_WIDTH,
+			SELECTED_CHAR_DISPLAY_AREA_HIGHT);
 	// Draw line
 	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
-	BSP_LCD_DrawRect(SELECTED_SYMBOL_DISPLAY_AREA_X,
-			SELECTED_SYMBOL_DISPLAY_AREA_Y,
-			SELECTED_SYMBOL_DISPLAY_AREA_WIDTH,
-			SELECTED_SYMBOL_DISPLAY_AREA_HIGHT);
+	BSP_LCD_DrawRect(SELECTED_CHAR_DISPLAY_AREA_X,
+			SELECTED_CHAR_DISPLAY_AREA_Y,
+			SELECTED_CHAR_DISPLAY_AREA_WIDTH,
+			SELECTED_CHAR_DISPLAY_AREA_HIGHT);
 
-	// Print ascii symbol
+	// Draw char
 	sFONT *pFont = &Font20;
 	BSP_LCD_SetFont(pFont);
 	BSP_LCD_SetTextColor(PEN_COLOR);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayChar(SELECTED_SYMBOL_DISPLAY_AREA_X + 8,
-			SELECTED_SYMBOL_DISPLAY_AREA_Y + 6, ascii_char);
+	BSP_LCD_DisplayChar(SELECTED_CHAR_DISPLAY_AREA_X + 8,
+			SELECTED_CHAR_DISPLAY_AREA_Y + 6, selected_char);
 }
 
-void Gui::draw_painting_symbol_display_area() {
+void Gui::draw_rescaled_painting_display_area() {
 
 	// Clear
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(PAINTING_SYMBOL_DISPLAY_AREA_X,
-			PAINTING_SYMBOL_DISPLAY_AREA_Y,
-			PAINTING_SYMBOL_DISPLAY_AREA_WIDTH,
-			PAINTING_SYMBOL_DISPLAY_AREA_HIGHT);
+	BSP_LCD_FillRect(RESCLAED_PAINTING_DISPLAY_AREA_X,
+			RESCLAED_PAINTING_DISPLAY_AREA_Y,
+			RESCLAED_PAINTING_DISPLAY_AREA_WIDTH,
+			RESCLAED_PAINTING_DISPLAY_AREA_HIGHT);
 
 	// Draw line
 	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
-	BSP_LCD_DrawRect(PAINTING_SYMBOL_DISPLAY_AREA_X,
-			PAINTING_SYMBOL_DISPLAY_AREA_Y,
-			PAINTING_SYMBOL_DISPLAY_AREA_WIDTH,
-			PAINTING_SYMBOL_DISPLAY_AREA_HIGHT);
+	BSP_LCD_DrawRect(RESCLAED_PAINTING_DISPLAY_AREA_X,
+			RESCLAED_PAINTING_DISPLAY_AREA_Y,
+			RESCLAED_PAINTING_DISPLAY_AREA_WIDTH,
+			RESCLAED_PAINTING_DISPLAY_AREA_HIGHT);
 }
 
-void Gui::update_painting(uint32_t x, uint32_t y)
+std::pair<uint32_t, uint32_t> Gui::update_painting_areas(uint32_t x, uint32_t y)
 {
 	// draw point in painting area
 	BSP_LCD_FillCircle(x, y, PEN_RADIUS);
 
-	// convert point in painting area to an offset (the source offset)
-	auto src_offset_x = x - PAINTING_AREA_X;
-	auto src_offset_y = y - PAINTING_AREA_Y;
-
-	// calculate offset in display area (the destination offset)
-	auto dst_offset_x = src_offset_x / RESCLAE_RATIO;
-	auto dst_offset_y = src_offset_y / RESCLAE_RATIO;
-
-	// calculate point in display area
-	auto dst_x = dst_offset_x + PAINTING_SYMBOL_DISPLAY_AREA_X;
-	auto dst_y = dst_offset_y + PAINTING_SYMBOL_DISPLAY_AREA_Y;
+	// Re-scale point
+	auto rescaled_x = (x - PAINTING_AREA_X) / RESCLAE_RATIO;
+	auto rescaled_y = (y - PAINTING_AREA_Y) / RESCLAE_RATIO;
 
 	// draw point in display area
+	auto dst_x = rescaled_x + RESCLAED_PAINTING_DISPLAY_AREA_X;
+	auto dst_y = rescaled_y + RESCLAED_PAINTING_DISPLAY_AREA_Y;
 	BSP_LCD_DrawPixel(dst_x, dst_y, PEN_COLOR);
+
+	return {rescaled_x, rescaled_y};
 }
 
 void Gui::draw_ok_button() {

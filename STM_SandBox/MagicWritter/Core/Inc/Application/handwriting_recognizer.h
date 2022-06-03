@@ -17,7 +17,8 @@ using raw_image_t = float;
 class Handwriting_recognizer final {
 public:
 	static void init();
-	static char predict_ascii_char_from_raw_image(raw_image_t * raw_image_ptr);
+	static char get_char_from_raw_image(raw_image_t * raw_image_ptr);
+	static void enable_debug(bool enable);
 };
 
 

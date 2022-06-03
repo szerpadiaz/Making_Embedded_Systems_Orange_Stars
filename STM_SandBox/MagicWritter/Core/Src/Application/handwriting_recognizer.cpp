@@ -15,14 +15,17 @@
 
 using namespace ei;
 
+static bool debug = false;
+constexpr bool debug_ei = false;
+
 void vprint(const char *fmt, va_list argp)
 {
-    char string[200];
-    if(0 < vsprintf(string, fmt, argp)) // build string
-    {
-        //HAL_UART_Transmit(&huart1, (uint8_t*)string, strlen(string), 0xffffff);
-    	// send message via UART
-    	ConsoleIoSendString(string);
+    if(debug) {
+        char string[200];
+		if(0 < vsprintf(string, fmt, argp)) // build string
+		{
+			ConsoleIoSendString(string);
+		}
     }
 }
 
@@ -41,10 +44,14 @@ int get_feature_data(size_t offset, size_t length, float *out_ptr) {
 }
 
 void Handwriting_recognizer::init() {
-
+	debug = false;
 }
 
-char Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image_t * raw_image)
+void Handwriting_recognizer::enable_debug(bool enable) {
+	debug = enable;
+}
+
+char Handwriting_recognizer::get_char_from_raw_image(raw_image_t * raw_image)
 {
 	signal_t signal;
 	raw_image_ptr = raw_image;
@@ -52,7 +59,7 @@ char Handwriting_recognizer::predict_ascii_char_from_raw_image(raw_image_t * raw
 	signal.get_data = &get_feature_data;
 
     ei_impulse_result_t result = { 0 };
-    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, false);
+    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, debug_ei);
     if (res != 0)
     	ei_printf("ERROR %d returned by run_classifier \r\n",res);
 
