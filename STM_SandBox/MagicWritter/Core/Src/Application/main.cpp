@@ -58,6 +58,8 @@ int main(void) {
 			selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 			Gui::draw_selected_char_display_area(selected_char);
 
+			Gui::print_info("<< You selected = %c", selected_char);
+
 			if (User_control_is_blinking_led_enable())
 				Led::toggle();
 		}
@@ -66,7 +68,7 @@ int main(void) {
 
 		switch (Gui::get_touch_event()) {
 		case Gui_event_t::ON_PAINTING_AREA:
-			//Gui::print_info("<< Painting");
+			Gui::print_info("<< Painting");
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
 			Gui::print_info("<< Clearing");
