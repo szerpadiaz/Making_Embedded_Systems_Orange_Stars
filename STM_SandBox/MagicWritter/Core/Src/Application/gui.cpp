@@ -7,6 +7,8 @@
 
 #include <Application/gui.h>
 #include <algorithm>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_lcd.h"
@@ -19,13 +21,6 @@ static raw_painting_image_t raw_painting_image[PAINTING_IMAGE_LENGTH];
 
 #define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
-
-
-constexpr uint32_t GUI_LAYOUT_LINE_COLOR = LCD_COLOR_BLACK;
-constexpr uint32_t PAINTING_AREA_WIDTH = PAINTING_IMAGE_WIDTH * GUI_PAINTING_AREA_RESCALED_RATIO;
-constexpr uint32_t PAINTING_AREA_HIGHT = PAINTING_IMAGE_HIGH * GUI_PAINTING_AREA_RESCALED_RATIO;
-constexpr uint32_t PAINTING_AREA_X = 8;
-constexpr uint32_t PAINTING_AREA_Y = 55;
 
 constexpr uint32_t CLEAR_BUTTON_RADIUS = 20;
 constexpr uint32_t CLEAR_BUTTON_X = 40;
@@ -46,6 +41,17 @@ constexpr uint32_t OK_BUTTON_RADIUS = 20;
 constexpr uint32_t OK_BUTTON_X = 240 - 40;
 constexpr uint32_t OK_BUTTON_Y = 25;
 constexpr uint32_t OK_BUTTON_COLOR = LCD_COLOR_GREEN;
+
+constexpr uint32_t GUI_LAYOUT_LINE_COLOR = LCD_COLOR_BLACK;
+constexpr uint32_t PAINTING_AREA_WIDTH = PAINTING_IMAGE_WIDTH * GUI_PAINTING_AREA_RESCALED_RATIO;
+constexpr uint32_t PAINTING_AREA_HIGHT = PAINTING_IMAGE_HIGH * GUI_PAINTING_AREA_RESCALED_RATIO;
+constexpr uint32_t PAINTING_AREA_X = 8;
+constexpr uint32_t PAINTING_AREA_Y = 55;
+
+constexpr uint32_t INFO_DISPLAY_AREA_WIDTH = PAINTING_AREA_WIDTH;
+constexpr uint32_t INFO_DISPLAY_AREA_HIGHT = 32;
+constexpr uint32_t INFO_DISPLAY_AREA_X = PAINTING_AREA_X;
+constexpr uint32_t INFO_DISPLAY_AREA_Y = PAINTING_AREA_Y + PAINTING_AREA_HIGHT + 5;
 
 
 void Gui::init() {
@@ -70,6 +76,8 @@ void Gui::init() {
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
 	draw_menu();
+
+	Gui::print_info(" << ");
 }
 
 Gui_event_t Gui::get_touch_event() {
@@ -79,9 +87,9 @@ Gui_event_t Gui::get_touch_event() {
 	uint32_t y = (TS_State.Y - 320) * -1;
 
 	if (TS_State.TouchDetected) {
-		// print_xy_in_info_area(x, y);
 
 		if (is_position_in_painting_area(x, y)) {
+			print_info("<< Painting at (%d, %d)", x, y);
 			update_painting_areas(x, y);
 			return Gui_event_t::ON_PAINTING_AREA;
 		} else if (is_position_in_clear_button(x, y)) {
@@ -112,7 +120,6 @@ void Gui::draw_menu(void) {
 	draw_painting_area();
 	draw_rescaled_painting_display_area();
 	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
-	//draw_info_area();
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
@@ -260,45 +267,36 @@ void Gui::draw_wrong_answer_animation() {
 	BSP_LCD_SelectLayer(0);
 }
 
-void Gui::draw_info_area() {
-	sFONT *pFont = &Font8;
-	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(10, (BSP_LCD_GetYSize() - 15),
-			(uint8_t*) "Dimension: WWW x HHH | Position: (000 , 000)",
-			LEFT_MODE);
-	print_number_at_position(10 + 11 * pFont->Width, (BSP_LCD_GetYSize() - 15),
-			BSP_LCD_GetXSize());
-	print_number_at_position(10 + 17 * pFont->Width, (BSP_LCD_GetYSize() - 15),
-			BSP_LCD_GetYSize());
-}
+void Gui::vprint(const char* string) {
 
-void Gui::print_xy_in_info_area(uint32_t pos_x, uint32_t pos_y) {
-	sFONT *pFont = &Font8;
-	BSP_LCD_SetFont(pFont);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_FillRect(INFO_DISPLAY_AREA_X, INFO_DISPLAY_AREA_Y, INFO_DISPLAY_AREA_WIDTH, INFO_DISPLAY_AREA_HIGHT);
+
 	BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	print_number_at_position(10 + 34 * pFont->Width, (BSP_LCD_GetYSize() - 15),
-			pos_x);
-	print_number_at_position(10 + 40 * pFont->Width, (BSP_LCD_GetYSize() - 15),
-			pos_y);
+
+	sFONT *pFont = &Font12;
+	BSP_LCD_SetFont(pFont);
+	BSP_LCD_DisplayStringAt(
+			INFO_DISPLAY_AREA_X + pFont->Width,
+			INFO_DISPLAY_AREA_Y + pFont->Height,
+			(uint8_t*) string,
+			LEFT_MODE);
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 }
 
-void Gui::print_number_at_position(uint32_t pos_x, uint32_t pos_y,
-		uint16_t number) {
-	sFONT *pFont = BSP_LCD_GetFont();
-	uint16_t w = pFont->Width;
+void Gui::print_info(const char *format, ...) {
+    va_list myargs;
+    va_start(myargs, format);
 
-	uint32_t x_d1 = number / 100;
-	uint32_t x_d2 = (number - x_d1 * 100) / 10;
-	uint32_t x_d3 = number - x_d1 * 100 - x_d2 * 10;
+    char string[200];
+	if(0 < vsprintf(string, format, myargs)) //	Build string
+	{
+		vprint(string);
+	}
 
-	BSP_LCD_DisplayChar(pos_x, pos_y, x_d1 + 48);
-	BSP_LCD_DisplayChar(pos_x + w, pos_y, x_d2 + 48);
-	BSP_LCD_DisplayChar(pos_x + 2 * w, pos_y, x_d3 + 48);
+    va_end(myargs);
 }
 

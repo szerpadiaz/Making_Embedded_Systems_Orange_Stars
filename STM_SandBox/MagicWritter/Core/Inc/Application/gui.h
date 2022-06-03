@@ -24,6 +24,7 @@ public:
 	static void draw_right_answer_animation();
 	static void draw_wrong_answer_animation();
 	static void clear_painting_area();
+	static void print_info(const char *format, ...);
 
 private:
 	static void draw_menu();
@@ -32,11 +33,7 @@ private:
 	static void draw_painting_area();
 	static void draw_rescaled_painting_display_area();
 	static void update_painting_areas(uint32_t x, uint32_t y);
-
-	static void draw_info_area();
-	static void print_xy_in_info_area(uint32_t pos_x, uint32_t pos_y);
-	static void print_number_at_position(uint32_t pos_x, uint32_t pos_y,
-			uint16_t number);
+	static void vprint(const char* string);
 
 	static bool is_position_in_painting_area(uint32_t x, uint32_t y);
 	static bool is_position_in_clear_button(uint32_t x, uint32_t y);

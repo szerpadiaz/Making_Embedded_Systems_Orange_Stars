@@ -49,6 +49,8 @@ int main(void) {
 	Handwriting_recognizer::init();
 	Handwriting_recognizer::enable_debug(true);
 
+	Gui::print_info(" << Welcome to magic Writer!");
+
 	while (1) {
 
 		if (Button::is_pressed() && is_time_to_check_button()) {
@@ -64,17 +66,22 @@ int main(void) {
 
 		switch (Gui::get_touch_event()) {
 		case Gui_event_t::ON_PAINTING_AREA:
+			//Gui::print_info("<< Painting");
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
+			Gui::print_info("<< Clearing");
 			break;
 		case Gui_event_t::ON_CHECK_BUTTON:
 		{
+			Gui::print_info("<< Verifying");
 			char detected_char = Handwriting_recognizer::get_char_from_image(painting_image_ptr);
 
 			if(selected_char == detected_char)
 				Gui::draw_right_answer_animation();
 			else
 				Gui::draw_wrong_answer_animation();
+
+			Gui::print_info("<< Character detected = %c", detected_char);
 		}
 			break;
 		default:
