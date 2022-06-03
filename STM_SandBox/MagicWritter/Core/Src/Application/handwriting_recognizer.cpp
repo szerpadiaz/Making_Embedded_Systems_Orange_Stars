@@ -36,10 +36,10 @@ void ei_printf(const char *format, ...) {
     va_end(myargs);
 }
 
-static raw_image_t * raw_image_ptr;
+static raw_painting_image_t const * raw_image_ptr;
 
-int get_feature_data(size_t offset, size_t length, float *out_ptr) {
-    memcpy(out_ptr, raw_image_ptr + offset, length * sizeof(float));
+int get_feature_data(size_t offset, size_t length, raw_painting_image_t *out_ptr) {
+    memcpy(out_ptr, raw_image_ptr + offset, length * sizeof(raw_painting_image_t));
     return 0;
 }
 
@@ -51,11 +51,11 @@ void Handwriting_recognizer::enable_debug(bool enable) {
 	debug = enable;
 }
 
-char Handwriting_recognizer::get_char_from_raw_image(raw_image_t * raw_image)
+char Handwriting_recognizer::get_char_from_image(raw_painting_image_t const * image_ptr)
 {
 	signal_t signal;
-	raw_image_ptr = raw_image;
-	signal.total_length = RAW_IMAGE_LENGTH;
+	raw_image_ptr = image_ptr;
+	signal.total_length = PAINTING_IMAGE_LENGTH;
 	signal.get_data = &get_feature_data;
 
     ei_impulse_result_t result = { 0 };

@@ -11,13 +11,13 @@
 #include <stddef.h>
 #include <array>
 
-constexpr size_t RAW_IMAGE_LENGTH = 28*28;
-using raw_image_t = float;
+#include <application_settings.h>
+
 
 class Handwriting_recognizer final {
 public:
 	static void init();
-	static char get_char_from_raw_image(raw_image_t * raw_image_ptr);
+	static char get_char_from_image(raw_painting_image_t const * raw_image_ptr);
 	static void enable_debug(bool enable);
 };
 
