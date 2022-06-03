@@ -20,13 +20,10 @@ static raw_painting_image_t raw_painting_image[PAINTING_IMAGE_LENGTH];
 #define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
 
-constexpr uint32_t RESCALED_RATIO = 8;
-constexpr uint32_t PEN_COLOR = LCD_COLOR_DARKGREEN;
-constexpr uint32_t PEN_RADIUS = RESCALED_RATIO;
 
 constexpr uint32_t GUI_LAYOUT_LINE_COLOR = LCD_COLOR_BLACK;
-constexpr uint32_t PAINTING_AREA_WIDTH = PAINTING_IMAGE_WIDTH * RESCALED_RATIO;
-constexpr uint32_t PAINTING_AREA_HIGHT = PAINTING_IMAGE_HIGH * RESCALED_RATIO;
+constexpr uint32_t PAINTING_AREA_WIDTH = PAINTING_IMAGE_WIDTH * GUI_PAINTING_AREA_RESCALED_RATIO;
+constexpr uint32_t PAINTING_AREA_HIGHT = PAINTING_IMAGE_HIGH * GUI_PAINTING_AREA_RESCALED_RATIO;
 constexpr uint32_t PAINTING_AREA_X = 8;
 constexpr uint32_t PAINTING_AREA_Y = 55;
 
@@ -82,7 +79,7 @@ Gui_event_t Gui::get_touch_event() {
 	uint32_t y = (TS_State.Y - 320) * -1;
 
 	if (TS_State.TouchDetected) {
-		print_xy_in_info_area(x, y);
+		// print_xy_in_info_area(x, y);
 
 		if (is_position_in_painting_area(x, y)) {
 			update_painting_areas(x, y);
@@ -115,10 +112,10 @@ void Gui::draw_menu(void) {
 	draw_painting_area();
 	draw_rescaled_painting_display_area();
 	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
-	draw_info_area();
+	//draw_info_area();
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(PEN_COLOR);
+	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 }
 
 void Gui::draw_painting_area() {
@@ -131,10 +128,10 @@ void Gui::draw_painting_area() {
 }
 
 bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
-	const bool x_in_rect = (x > PAINTING_AREA_X + PEN_RADIUS
-			&& x < (PAINTING_AREA_X + PAINTING_AREA_WIDTH - PEN_RADIUS));
-	const bool y_in_rect = (y > PAINTING_AREA_Y + PEN_RADIUS
-			&& y < (PAINTING_AREA_Y + PAINTING_AREA_HIGHT - PEN_RADIUS));
+	const bool x_in_rect = (x > PAINTING_AREA_X + GUI_PAINTING_PEN_RADIUS
+			&& x < (PAINTING_AREA_X + PAINTING_AREA_WIDTH - GUI_PAINTING_PEN_RADIUS));
+	const bool y_in_rect = (y > PAINTING_AREA_Y + GUI_PAINTING_PEN_RADIUS
+			&& y < (PAINTING_AREA_Y + PAINTING_AREA_HIGHT - GUI_PAINTING_PEN_RADIUS));
 
 	return (x_in_rect && y_in_rect);
 }
@@ -145,7 +142,7 @@ void Gui::clear_painting_area() {
 
 	// make sure to set painting setting again
 	// BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	// BSP_LCD_SetTextColor(PEN_COLOR);
+	// BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 }
 
 void Gui::draw_clear_button() {
@@ -178,7 +175,7 @@ void Gui::draw_selected_char_display_area(char selected_char) {
 	// Draw char
 	sFONT *pFont = &Font20;
 	BSP_LCD_SetFont(pFont);
-	BSP_LCD_SetTextColor(PEN_COLOR);
+	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_DisplayChar(SELECTED_CHAR_DISPLAY_AREA_X + 8,
 			SELECTED_CHAR_DISPLAY_AREA_Y + 6, selected_char);
@@ -204,11 +201,11 @@ void Gui::draw_rescaled_painting_display_area() {
 void Gui::update_painting_areas(uint32_t x, uint32_t y)
 {
 	// draw point in painting area
-	BSP_LCD_FillCircle(x, y, PEN_RADIUS);
+	BSP_LCD_FillCircle(x, y, GUI_PAINTING_PEN_RADIUS);
 
 	// Re-scale point
-	auto rescaled_x = (x - PAINTING_AREA_X) / RESCALED_RATIO;
-	auto rescaled_y = (y - PAINTING_AREA_Y) / RESCALED_RATIO;
+	auto rescaled_x = (x - PAINTING_AREA_X) / GUI_PAINTING_AREA_RESCALED_RATIO;
+	auto rescaled_y = (y - PAINTING_AREA_Y) / GUI_PAINTING_AREA_RESCALED_RATIO;
 
 	// Update scaled image of painting area
 	raw_painting_image[rescaled_y*PAINTING_IMAGE_WIDTH + rescaled_x] = PAINTING_IMAGE_PIXEL_SET_COLOR;
@@ -216,7 +213,7 @@ void Gui::update_painting_areas(uint32_t x, uint32_t y)
 	// draw point in display area
 	auto dst_x = rescaled_x + RESCALED_PAINTING_DISPLAY_AREA_X;
 	auto dst_y = rescaled_y + RESCALED_PAINTING_DISPLAY_AREA_Y;
-	BSP_LCD_DrawPixel(dst_x, dst_y, PEN_COLOR);
+	BSP_LCD_DrawPixel(dst_x, dst_y, GUI_PAINTING_PEN_COLOR);
 }
 
 void Gui::draw_ok_button() {
@@ -288,7 +285,7 @@ void Gui::print_xy_in_info_area(uint32_t pos_x, uint32_t pos_y) {
 			pos_y);
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(PEN_COLOR);
+	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 }
 
 void Gui::print_number_at_position(uint32_t pos_x, uint32_t pos_y,
