@@ -77,7 +77,7 @@ void Gui::init() {
 
 	draw_menu();
 
-	Gui::print_info(" << ");
+	Gui::print_info(" >> ");
 }
 
 Gui_event_t Gui::get_touch_event() {
@@ -89,7 +89,7 @@ Gui_event_t Gui::get_touch_event() {
 	if (TS_State.TouchDetected) {
 
 		if (is_position_in_painting_area(x, y)) {
-			//print_info("<< Painting at (%d, %d)", x, y);
+			//print_info(">> Painting at (%d, %d)", x, y);
 			update_painting_areas(x, y);
 			return Gui_event_t::ON_PAINTING_AREA;
 		} else if (is_position_in_clear_button(x, y)) {

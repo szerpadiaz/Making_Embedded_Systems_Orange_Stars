@@ -49,7 +49,7 @@ int main(void) {
 	Handwriting_recognizer::init();
 	Handwriting_recognizer::enable_debug(true);
 
-	Gui::print_info(" << Welcome to magic Writer!");
+	Gui::print_info(" >> Welcome to magic Writer!");
 
 	while (1) {
 
@@ -58,7 +58,7 @@ int main(void) {
 			selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 			Gui::draw_selected_char_display_area(selected_char);
 
-			Gui::print_info("<< You selected = %c", selected_char);
+			Gui::print_info(">> You selected = %c", selected_char);
 
 			if (User_control_is_blinking_led_enable())
 				Led::toggle();
@@ -68,14 +68,14 @@ int main(void) {
 
 		switch (Gui::get_touch_event()) {
 		case Gui_event_t::ON_PAINTING_AREA:
-			Gui::print_info("<< Painting");
+			Gui::print_info(">> Painting ...");
 			break;
 		case Gui_event_t::ON_CLEAR_BUTTON:
-			Gui::print_info("<< Clearing");
+			Gui::print_info(">> All clear!");
 			break;
 		case Gui_event_t::ON_CHECK_BUTTON:
 		{
-			Gui::print_info("<< Verifying");
+			Gui::print_info(">> Verifying ... ");
 			char detected_char = Handwriting_recognizer::get_char_from_image(painting_image_ptr);
 
 			if(selected_char == detected_char)
@@ -83,7 +83,7 @@ int main(void) {
 			else
 				Gui::draw_wrong_answer_animation();
 
-			Gui::print_info("<< Character detected = %c", detected_char);
+			Gui::print_info(">> Character detected = %c", detected_char);
 		}
 			break;
 		default:
