@@ -80,6 +80,18 @@ void Gui::init() {
 	Gui::print_info(" >> ");
 }
 
+void Gui::turn_on() {
+	// Turn on backlight?
+	BSP_LCD_SetTransparency(0, 255);
+	BSP_LCD_DisplayOn();
+}
+
+void Gui::turn_off() {
+	// Turn off backlight?
+	BSP_LCD_SetTransparency(0, 0);
+	BSP_LCD_DisplayOff();
+}
+
 Gui_event_t Gui::get_touch_event() {
 	TS_StateTypeDef TS_State;
 	BSP_TS_GetState(&TS_State);

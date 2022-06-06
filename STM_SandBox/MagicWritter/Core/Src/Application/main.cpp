@@ -54,6 +54,7 @@ int main(void) {
 	while (1) {
 
 		if (Button::is_pressed() && is_time_to_check_button()) {
+			Gui::turn_on();
 			Gui::clear_painting_area();
 			selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 			Gui::draw_selected_char_display_area(selected_char);
@@ -77,13 +78,15 @@ int main(void) {
 		{
 			Gui::print_info(">> Verifying ... ");
 			char detected_char = Handwriting_recognizer::get_char_from_image(painting_image_ptr);
+			Gui::print_info(">> Char detected = %c ", detected_char);
 
 			if(selected_char == detected_char)
 				Gui::draw_right_answer_animation();
 			else
 				Gui::draw_wrong_answer_animation();
 
-			Gui::print_info(">> Character detected = %c", detected_char);
+			Gui::clear_painting_area();
+			Gui::turn_off();
 		}
 			break;
 		default:

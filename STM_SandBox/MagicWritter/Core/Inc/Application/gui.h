@@ -26,6 +26,9 @@ public:
 	static void clear_painting_area();
 	static void print_info(const char *format, ...);
 
+	static void turn_on();
+	static void turn_off();
+
 private:
 	static void draw_menu();
 	static void draw_clear_button();
