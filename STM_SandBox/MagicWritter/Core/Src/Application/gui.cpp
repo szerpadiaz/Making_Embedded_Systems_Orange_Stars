@@ -106,7 +106,6 @@ Gui_event_t Gui::get_touch_event() {
 			return Gui_event_t::ON_PAINTING_AREA;
 		} else if (is_position_in_clear_button(x, y)) {
 			Gui::clear_painting_area();
-			std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
 			return Gui_event_t::ON_CLEAR_BUTTON;
 		} else if (is_position_in_ok_button(x, y)) {
 			return Gui_event_t::ON_CHECK_BUTTON;
@@ -158,7 +157,7 @@ bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
 void Gui::clear_painting_area() {
 	draw_rescaled_painting_display_area();
 	draw_painting_area();
-
+	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
 	// make sure to set painting setting again
 	// BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	// BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
