@@ -135,13 +135,3 @@ void Magic_writer::handle_event(Event event){
 
 }
 
-
-/*
-#include <Application/magic_writer.h>
-using namespace Magic_writer;
-
-Magic_writer::Magic_writer magic_writer {};
-
-magic_writer.run();
-
-*/
