@@ -12,31 +12,31 @@
 
 namespace Magic_writer {
 
-enum class Event {
-	ENTRY, EXIT,
+enum class Event_t {
+	ENTRY,
+	EXIT,
 	//TIMEOUT,
 	SELECT,
 	PAINT,
 	CHECK,
 	CLEAR,
-	MAX_SIG
-};
-enum class Status {
-	TRANSITION, HANDLED, IGNORED, INIT
+	TOTAL_EVENTS
 };
 
+enum class Status_t {TRANSITION, HANDLED, IGNORED};
 
-class Magic_writer {
-	typedef Status(Magic_writer::*State_Handler_t)(Event event);
+
+class Magic_writer_t {
+	typedef Status_t(Magic_writer_t::*State_Handler_t)(Event_t event);
 public:
 
-	Magic_writer();
+	Magic_writer_t();
 	void run();
 
 private:
-	void handle_event(Event event);
-	Status ready(Event event);
-	Status painting(Event event);
+	void handle_event(Event_t event);
+	Status_t ready(Event_t event);
+	Status_t painting(Event_t event);
 
 	void update_selection();
 	void verify_selection();
