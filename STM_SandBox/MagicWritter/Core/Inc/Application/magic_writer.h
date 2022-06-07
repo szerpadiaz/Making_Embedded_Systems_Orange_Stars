@@ -39,6 +39,7 @@ private:
 	Status painting(Event event);
 
 	void update_selection();
+	void verify_selection();
 
 	State_Handler_t state;
 	char selected_char;

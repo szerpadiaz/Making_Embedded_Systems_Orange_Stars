@@ -71,16 +71,7 @@ Status Magic_writer::painting(Event event) {
             break;
         }
         case Event::CHECK: {
-    		Gui::print_info(">> VERIFYING PAINTING");
-    		auto painting_image_ptr = Gui::get_painting_image();
-    		char detected_char = Handwriting_recognizer::get_char_from_image(painting_image_ptr);
-    		Gui::print_info(">> Char detected = %c ", detected_char);
-
-    		if(selected_char == detected_char)
-    			Gui::draw_right_answer_animation();
-    		else
-    			Gui::draw_wrong_answer_animation();
-
+        	this->verify_selection();
             this->state = &Magic_writer::ready;
             status = Status::TRANSITION;
             break;
@@ -102,6 +93,20 @@ void Magic_writer::update_selection() {
 		this->selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 		Gui::draw_selected_char_display_area(this->selected_char);
 	}
+}
+
+void Magic_writer::verify_selection() {
+
+	Gui::print_info(">> VERIFYING PAINTING");
+
+	auto painting_image_ptr = Gui::get_painting_image();
+	char detected_char = Handwriting_recognizer::get_char_from_image(painting_image_ptr);
+	Gui::print_info(">> Char detected = %c ", detected_char);
+
+	if(selected_char == detected_char)
+		Gui::draw_right_answer_animation();
+	else
+		Gui::draw_wrong_answer_animation();
 }
 
 void Magic_writer::run(){
