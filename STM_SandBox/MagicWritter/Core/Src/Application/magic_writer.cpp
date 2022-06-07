@@ -13,11 +13,13 @@
 namespace Magic_writer {
 
 Magic_writer::Magic_writer(void){
+
 	this->selected_char = '0';
 	Gui::draw_selected_char_display_area(this->selected_char);
+	this->selection_last_update_time = Time::ticks_ms();
+
 	this->state = &Magic_writer::ready;
 	(this->*state)(Event::ENTRY);
-	this->time_to_check_button = 0;
 }
 
 Status Magic_writer::ready(Event event) {
@@ -29,6 +31,12 @@ Status Magic_writer::ready(Event event) {
     		status = Status::HANDLED;
     		break;
     	}
+        case Event::SELECT: {
+        	this->update_selection();
+            this->state = &Magic_writer::ready;
+            status = Status::HANDLED;
+            break;
+        }
         case Event::PAINT: {
             this->state = &Magic_writer::painting;
             status = Status::TRANSITION;
@@ -52,6 +60,7 @@ Status Magic_writer::painting(Event event) {
     		break;
     	}
         case Event::SELECT: {
+        	this->update_selection();
             this->state = &Magic_writer::ready;
             status = Status::TRANSITION;
             break;
@@ -85,25 +94,24 @@ Status Magic_writer::painting(Event event) {
 
 }
 
-bool Magic_writer::is_time_to_check_button() {
+void Magic_writer::update_selection() {
 
 	auto const now = Time::ticks_ms();
-	if (Time::ticks_diff(this->time_to_check_button, now) > 0) {
-		return false;
-	} else {
-		this->time_to_check_button = Time::ticks_add(now, 300);
-		return true;
+	if (Time::ticks_diff(now, this->selection_last_update_time) > 300) {
+		this->selection_last_update_time = now;
+		this->selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
+		Gui::draw_selected_char_display_area(this->selected_char);
 	}
 }
 
 void Magic_writer::run(){
 
-	if (Button::is_pressed() && this->is_time_to_check_button()) {
-		this->selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
-		Gui::draw_selected_char_display_area(this->selected_char);
+	// Check button
+	if (Button::is_pressed()) {
 		this->handle_event(Event::SELECT);
 	}
 
+	// Check GUI
 	switch (Gui::get_touch_event()) {
 	case Gui_event_t::ON_PAINTING_AREA:
 		this->handle_event(Event::PAINT);
@@ -134,4 +142,5 @@ void Magic_writer::handle_event(Event event){
 }
 
 }
+
 

@@ -38,11 +38,11 @@ private:
 	Status ready(Event event);
 	Status painting(Event event);
 
-	bool is_time_to_check_button();
+	void update_selection();
 
 	State_Handler_t state;
 	char selected_char;
-	uint32_t time_to_check_button;
+	uint32_t selection_last_update_time;
 };
 
 }
