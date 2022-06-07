@@ -20,6 +20,36 @@ Magic_writer_t::Magic_writer_t(void){
 
 	this->state = &Magic_writer_t::ready;
 	(this->*state)(Event_t::ENTRY);
+
+	this->last_event_time = Time::ticks_ms();
+}
+
+Status_t Magic_writer_t::idle(Event_t event) {
+    Status_t status;
+    switch (event) {
+    	case Event_t::ENTRY: {
+    		Gui::print_info(">> STATE: IDLE");
+    		Gui::turn_off();
+    		status = Status_t::HANDLED;
+    		break;
+    	}
+        case Event_t::SELECT: {
+            this->state = &Magic_writer_t::ready;
+            status = Status_t::TRANSITION;
+            break;
+        }
+        case Event_t::EXIT: {
+    		Gui::turn_on();
+    		status = Status_t::HANDLED;
+        	break;
+        }
+        default: {
+            status = Status_t::IGNORED;
+            break;
+        }
+    }
+    return status;
+
 }
 
 Status_t Magic_writer_t::ready(Event_t event) {
@@ -39,6 +69,11 @@ Status_t Magic_writer_t::ready(Event_t event) {
         }
         case Event_t::PAINT: {
             this->state = &Magic_writer_t::painting;
+            status = Status_t::TRANSITION;
+            break;
+        }
+        case Event_t::TIMEOUT: {
+            this->state = &Magic_writer_t::idle;
             status = Status_t::TRANSITION;
             break;
         }
@@ -76,6 +111,11 @@ Status_t Magic_writer_t::painting(Event_t event) {
             status = Status_t::TRANSITION;
             break;
         }
+        case Event_t::TIMEOUT: {
+            this->state = &Magic_writer_t::idle;
+            status = Status_t::TRANSITION;
+            break;
+        }
         default: {
             status = Status_t::IGNORED;
             break;
@@ -87,8 +127,9 @@ Status_t Magic_writer_t::painting(Event_t event) {
 
 void Magic_writer_t::update_selection() {
 
+	constexpr uint32_t update_rate_ms = 300;
 	auto const now = Time::ticks_ms();
-	if (Time::ticks_diff(now, this->selection_last_update_time) > 300) {
+	if (Time::ticks_diff(now, this->selection_last_update_time) > update_rate_ms) {
 		this->selection_last_update_time = now;
 		this->selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 		Gui::draw_selected_char_display_area(this->selected_char);
@@ -111,13 +152,8 @@ void Magic_writer_t::verify_selection() {
 
 void Magic_writer_t::run(){
 
-	// Check button
-	if (Button::is_pressed()) {
-		this->handle_event(Event_t::SELECT);
-	}
-
-	// Check GUI
-	switch (Gui::get_touch_event()) {
+	const auto touch_event = Gui::get_touch_event();
+	switch (touch_event) {
 	case Gui_event_t::ON_PAINTING_AREA:
 		this->handle_event(Event_t::PAINT);
 		break;
@@ -129,6 +165,21 @@ void Magic_writer_t::run(){
 		break;
 	default:
 		break;
+	}
+
+	const bool button_pressed = Button::is_pressed();
+	if (button_pressed) {
+		this->handle_event(Event_t::SELECT);
+	}
+
+	// Check timeout
+	constexpr uint32_t timeout_ms = 10000;
+	const auto now = Time::ticks_ms();
+	if (touch_event != Gui_event_t::NONE || button_pressed) {
+		this->last_event_time = now;
+	}
+	else if (Time::ticks_diff(now, this->last_event_time) > timeout_ms) {
+		this->handle_event(Event_t::TIMEOUT);
 	}
 }
 

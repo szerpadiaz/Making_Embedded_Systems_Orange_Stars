@@ -15,7 +15,7 @@ namespace Magic_writer {
 enum class Event_t {
 	ENTRY,
 	EXIT,
-	//TIMEOUT,
+	TIMEOUT,
 	SELECT,
 	PAINT,
 	CHECK,
@@ -35,6 +35,7 @@ public:
 
 private:
 	void handle_event(Event_t event);
+	Status_t idle(Event_t event);
 	Status_t ready(Event_t event);
 	Status_t painting(Event_t event);
 
@@ -44,6 +45,7 @@ private:
 	State_Handler_t state;
 	char selected_char;
 	uint32_t selection_last_update_time;
+	uint32_t last_event_time;
 };
 
 }
