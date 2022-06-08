@@ -44,7 +44,9 @@ eCommandResult_T Magic_writer_remote_control::paint(const char buffer[]) {
 	int16_t y = 0;
 	eCommandResult_T result;
 	result = ConsoleReceiveParamInt16(buffer, 1, &x);
-	result += ConsoleReceiveParamInt16(buffer, 2, &y);
+	if ( COMMAND_SUCCESS == result )
+		result = ConsoleReceiveParamInt16(buffer, 2, &y);
+
 	if ( COMMAND_SUCCESS == result )
 	{
 		magic_writer_ptr->set_remote_event(Event_t::PAINT, x, y);
