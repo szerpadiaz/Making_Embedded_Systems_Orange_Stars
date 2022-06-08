@@ -8,12 +8,17 @@
 #ifndef INC_APPLICATION_USER_CONTROL_H_
 #define INC_APPLICATION_USER_CONTROL_H_
 
-class User_control final {
+#include "Application/magic_writer.h"
+#include <Application/console.h>
+
+class Magic_writer_remote_control final {
 public:
-	static void init();
-	static bool is_blinking_led_enable();
-	static void enable_blinking_led();
-	static void disable_blinking_led();
+	static void init(Magic_writer::Magic_writer_t * magic_writer);
+	static eCommandResult_T enable(const char buffer[]);
+	static eCommandResult_T select(const char buffer[]);
+	static eCommandResult_T paint(const char buffer[]);
+	static eCommandResult_T clear(const char buffer[]);
+	static eCommandResult_T check(const char buffer[]);
 };
 
 #endif /* INC_APPLICATION_USER_CONTROL_H_ */

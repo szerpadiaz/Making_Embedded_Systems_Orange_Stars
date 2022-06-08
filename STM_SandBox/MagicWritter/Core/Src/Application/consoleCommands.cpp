@@ -14,18 +14,12 @@
 #include <Application/version.h>
 #include <Application/User_control.h>
 
-#define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
-
-
 
 static eCommandResult_T ConsoleCommandComment(const char buffer[]);
 static eCommandResult_T ConsoleCommandVer(const char buffer[]);
 static eCommandResult_T ConsoleCommandHelp(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleInt16(const char buffer[]);
 static eCommandResult_T ConsoleCommandParamExampleHexUint16(const char buffer[]);
-
-static eCommandResult_T ConsoleCommandEnableBlinkingLed(const char buffer[]);
-static eCommandResult_T ConsoleCommandDisableBlinkingLed(const char buffer[]);
 
 static const sConsoleCommandTable_T mConsoleCommandTable[] =
 {
@@ -34,8 +28,11 @@ static const sConsoleCommandTable_T mConsoleCommandTable[] =
     {"ver", &ConsoleCommandVer, HELP("Get the version string")},
     {"int", &ConsoleCommandParamExampleInt16, HELP("How to get a signed int16 from params list: int -321")},
     {"u16h", &ConsoleCommandParamExampleHexUint16, HELP("How to get a hex u16 from the params list: u16h aB12")},
-	{"enableBlinking", &ConsoleCommandEnableBlinkingLed, HELP("Enable blinking LED")},
-	{"disableBlinking", &ConsoleCommandDisableBlinkingLed, HELP("Disable blinking LED")},
+	{"mw_enable", &Magic_writer_remote_control::enable, HELP("Enable Magic writer's remote control")},
+	{"mw_select", &Magic_writer_remote_control::select, HELP("Magic writer select char")},
+	{"mw_paint", &Magic_writer_remote_control::paint, HELP("Magic writer paint a point, from params list x y")},
+	{"mw_clear", &Magic_writer_remote_control::clear, HELP("Magic writer clear")},
+	{"mw_check", &Magic_writer_remote_control::check, HELP("Magic writer check")},
 	CONSOLE_COMMAND_TABLE_END // must be LAST
 };
 
@@ -115,18 +112,4 @@ static eCommandResult_T ConsoleCommandVer(const char buffer[])
 const sConsoleCommandTable_T* ConsoleCommandsGetTable(void)
 {
 	return (mConsoleCommandTable);
-}
-
-static eCommandResult_T ConsoleCommandEnableBlinkingLed(const char buffer[]) {
-	IGNORE_UNUSED_VARIABLE(buffer);
-	User_control::enable_blinking_led();
-	ConsoleIoSendString(STR_ENDLINE);
-	return COMMAND_SUCCESS;
-}
-
-static eCommandResult_T ConsoleCommandDisableBlinkingLed(const char buffer[]) {
-	IGNORE_UNUSED_VARIABLE(buffer);
-	User_control::disable_blinking_led();
-	ConsoleIoSendString(STR_ENDLINE);
-	return COMMAND_SUCCESS;
 }

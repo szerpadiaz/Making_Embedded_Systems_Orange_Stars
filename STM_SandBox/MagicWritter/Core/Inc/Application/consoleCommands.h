@@ -11,7 +11,9 @@
 #include <stdint.h>
 #include "console.h"
 
-#define CONSOLE_COMMAND_MAX_COMMAND_LENGTH 10		// command only
+#define IGNORE_UNUSED_VARIABLE(x)     if ( &x == &x ) {}
+
+#define CONSOLE_COMMAND_MAX_COMMAND_LENGTH 15		// command only
 #define CONSOLE_COMMAND_MAX_LENGTH 256				// whole command with argument
 #define CONSOLE_COMMAND_MAX_HELP_LENGTH 64			// if this is zero, there will be no  help (XXXOPT: RAM reduction)
 

@@ -189,7 +189,7 @@ void Magic_writer_t::handle_local_event(){
 	}
 
 	// Check timeout
-	constexpr uint32_t timeout_ms = 10000;
+	constexpr uint32_t timeout_ms = 100000;
 	const auto now = Time::ticks_ms();
 	if (touch_event != Gui_event_t::NONE || button_pressed) {
 		this->last_event_time = now;
@@ -210,6 +210,8 @@ void Magic_writer_t::handle_remote_event(){
 	default:
 		break;
 	}
+
+	this->remote_event = Event_t::TOTAL_EVENTS;
 }
 
 void Magic_writer_t::set_remote_event(Event_t event, uint32_t rescaled_x, uint32_t rescaled_y)

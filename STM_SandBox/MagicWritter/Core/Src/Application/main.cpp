@@ -32,10 +32,10 @@ int main(void) {
 	Handwriting_recognizer::init();
 	Handwriting_recognizer::enable_debug(true);
 
-	Magic_writer_t magic_writer {};
-
 	ConsoleInit();
-	User_control::init();
+
+	Magic_writer_t magic_writer {};
+	Magic_writer_remote_control::init(&magic_writer);
 
 	while (1) {
 
