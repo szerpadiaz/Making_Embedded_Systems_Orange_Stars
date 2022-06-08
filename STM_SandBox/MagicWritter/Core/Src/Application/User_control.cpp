@@ -9,19 +9,19 @@
 
 static 	bool blinking_led_enabled;
 
-void User_control_init() {
+void User_control::init() {
 	blinking_led_enabled = true;
 }
 
-bool User_control_is_blinking_led_enable() {
+bool User_control::is_blinking_led_enable() {
 	return blinking_led_enabled;
 }
 
-void User_control_enable_blinking_led(){
+void User_control::enable_blinking_led(){
 	blinking_led_enabled = true;
 }
 
-void User_control_disable_blinking_led()
+void User_control::disable_blinking_led()
 {
 	blinking_led_enabled = false;
 }

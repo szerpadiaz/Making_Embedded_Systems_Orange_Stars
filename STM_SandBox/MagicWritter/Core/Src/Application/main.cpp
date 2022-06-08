@@ -27,7 +27,7 @@ int main(void) {
 
 	Button::init();
 
-	User_control_init();
+	User_control::init();
 
 	ConsoleInit();
 

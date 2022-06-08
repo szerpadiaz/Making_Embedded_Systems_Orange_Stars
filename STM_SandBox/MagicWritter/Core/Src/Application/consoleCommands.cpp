@@ -119,14 +119,14 @@ const sConsoleCommandTable_T* ConsoleCommandsGetTable(void)
 
 static eCommandResult_T ConsoleCommandEnableBlinkingLed(const char buffer[]) {
 	IGNORE_UNUSED_VARIABLE(buffer);
-	User_control_enable_blinking_led();
+	User_control::enable_blinking_led();
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;
 }
 
 static eCommandResult_T ConsoleCommandDisableBlinkingLed(const char buffer[]) {
 	IGNORE_UNUSED_VARIABLE(buffer);
-	User_control_disable_blinking_led();
+	User_control::disable_blinking_led();
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;
 }
