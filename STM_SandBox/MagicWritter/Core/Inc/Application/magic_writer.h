@@ -32,8 +32,13 @@ public:
 
 	Magic_writer_t();
 	void run();
+	//void set_remote_event();
 
 private:
+	void handle_local_event();
+	//Event_t handle_remote_event();
+
+
 	void handle_event(Event_t event);
 	Status_t idle(Event_t event);
 	Status_t ready(Event_t event);
@@ -46,6 +51,11 @@ private:
 	char selected_char;
 	uint32_t selection_last_update_time;
 	uint32_t last_event_time;
+	uint32_t x;
+	uint32_t y;
+
+	//Event_t remote_event;
+
 };
 
 }

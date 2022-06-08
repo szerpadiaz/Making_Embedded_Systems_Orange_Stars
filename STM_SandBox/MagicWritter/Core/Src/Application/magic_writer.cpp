@@ -68,6 +68,7 @@ Status_t Magic_writer_t::ready(Event_t event) {
             break;
         }
         case Event_t::PAINT: {
+        	Gui::update_painting_areas(this->x, this->y);
             this->state = &Magic_writer_t::painting;
             status = Status_t::TRANSITION;
             break;
@@ -100,7 +101,14 @@ Status_t Magic_writer_t::painting(Event_t event) {
             status = Status_t::TRANSITION;
             break;
         }
+        case Event_t::PAINT: {
+        	Gui::update_painting_areas(this->x, this->y);
+            this->state = &Magic_writer_t::painting;
+            status = Status_t::HANDLED;
+            break;
+        }
         case Event_t::CLEAR: {
+			Gui::clear_painting_area();
             this->state = &Magic_writer_t::ready;
             status = Status_t::TRANSITION;
             break;
@@ -150,11 +158,12 @@ void Magic_writer_t::verify_selection() {
 		Gui::draw_wrong_answer_animation();
 }
 
-void Magic_writer_t::run(){
-
-	const auto touch_event = Gui::get_touch_event();
+void Magic_writer_t::handle_local_event(){
+	const auto [touch_event, x, y]= Gui::get_touch_event();
 	switch (touch_event) {
 	case Gui_event_t::ON_PAINTING_AREA:
+		this->x = x;
+		this->y = y;
 		this->handle_event(Event_t::PAINT);
 		break;
 	case Gui_event_t::ON_CLEAR_BUTTON:
@@ -181,6 +190,11 @@ void Magic_writer_t::run(){
 	else if (Time::ticks_diff(now, this->last_event_time) > timeout_ms) {
 		this->handle_event(Event_t::TIMEOUT);
 	}
+}
+
+void Magic_writer_t::run(){
+
+	this->handle_local_event();
 }
 
 void Magic_writer_t::handle_event(Event_t event){

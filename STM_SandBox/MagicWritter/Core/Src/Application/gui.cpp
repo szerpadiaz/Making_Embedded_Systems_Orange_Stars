@@ -92,26 +92,22 @@ void Gui::turn_off() {
 	BSP_LCD_DisplayOff();
 }
 
-Gui_event_t Gui::get_touch_event() {
+std::tuple<Gui_event_t, uint32_t, uint32_t> Gui::get_touch_event() {
 	TS_StateTypeDef TS_State;
 	BSP_TS_GetState(&TS_State);
 	uint32_t x = TS_State.X;
 	uint32_t y = (TS_State.Y - 320) * -1;
 
 	if (TS_State.TouchDetected) {
-
 		if (is_position_in_painting_area(x, y)) {
-			//print_info(">> Painting at (%d, %d)", x, y);
-			update_painting_areas(x, y);
-			return Gui_event_t::ON_PAINTING_AREA;
+			return {Gui_event_t::ON_PAINTING_AREA, x, y};
 		} else if (is_position_in_clear_button(x, y)) {
-			Gui::clear_painting_area();
-			return Gui_event_t::ON_CLEAR_BUTTON;
+			return {Gui_event_t::ON_CLEAR_BUTTON, 0, 0};
 		} else if (is_position_in_ok_button(x, y)) {
-			return Gui_event_t::ON_CHECK_BUTTON;
+			return {Gui_event_t::ON_CHECK_BUTTON, 0, 0};
 		}
 	}
-	return Gui_event_t::NONE;
+	return {Gui_event_t::NONE, 0, 0};
 }
 
 raw_painting_image_t const * Gui::get_painting_image() {
