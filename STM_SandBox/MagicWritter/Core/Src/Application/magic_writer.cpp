@@ -22,6 +22,13 @@ Magic_writer_t::Magic_writer_t(void){
 	(this->*state)(Event_t::ENTRY);
 
 	this->last_event_time = Time::ticks_ms();
+
+	this->remote_control_enable = false;
+}
+
+void Magic_writer_t::enable_remote_control(bool enable)
+{
+	this->remote_control_enable = enable;
 }
 
 Status_t Magic_writer_t::idle(Event_t event) {
@@ -192,9 +199,39 @@ void Magic_writer_t::handle_local_event(){
 	}
 }
 
+void Magic_writer_t::handle_remote_event(){
+
+	switch (this->remote_event) {
+	case Event_t::PAINT:
+	case Event_t::CLEAR:
+	case Event_t::SELECT:
+	case Event_t::CHECK:
+		this->handle_event(this->remote_event);
+	default:
+		break;
+	}
+}
+
+void Magic_writer_t::set_remote_event(Event_t event, uint32_t rescaled_x, uint32_t rescaled_y)
+{
+	if(this->remote_control_enable)
+	{
+		this->remote_event = event;
+		auto const [x, y] = Gui::from_rescaled_to_painting_point(rescaled_x, rescaled_y);
+		this->x = x;
+		this->y = y;
+	}
+}
+
 void Magic_writer_t::run(){
 
-	this->handle_local_event();
+	if(this->remote_control_enable)
+	{
+		this->handle_remote_event();
+	}
+	else {
+		this->handle_local_event();
+	}
 }
 
 void Magic_writer_t::handle_event(Event_t event){

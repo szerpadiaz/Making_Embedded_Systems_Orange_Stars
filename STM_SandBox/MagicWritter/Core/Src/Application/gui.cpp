@@ -212,6 +212,13 @@ void Gui::draw_rescaled_painting_display_area() {
 			RESCALED_PAINTING_DISPLAY_AREA_HIGHT);
 }
 
+std::pair<uint32_t, uint32_t> Gui::from_rescaled_to_painting_point(uint32_t rescaled_x, uint32_t rescaled_y)
+{
+	auto const x = (rescaled_x * GUI_PAINTING_AREA_RESCALED_RATIO) + PAINTING_AREA_X;
+	auto const y = (rescaled_y * GUI_PAINTING_AREA_RESCALED_RATIO) + PAINTING_AREA_Y;
+	return {x,y};
+}
+
 void Gui::update_painting_areas(uint32_t x, uint32_t y)
 {
 	// draw point in painting area

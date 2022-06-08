@@ -26,6 +26,8 @@ public:
 	static void draw_wrong_answer_animation();
 	static void clear_painting_area();
 	static void update_painting_areas(uint32_t x, uint32_t y);
+	static std::pair<uint32_t, uint32_t> from_rescaled_to_painting_point(uint32_t rescaled_x, uint32_t rescaled_y);
+
 	static void print_info(const char *format, ...);
 
 	static void turn_on();
