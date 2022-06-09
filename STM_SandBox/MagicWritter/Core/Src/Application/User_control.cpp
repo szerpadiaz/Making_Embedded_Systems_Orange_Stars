@@ -9,12 +9,33 @@
 #include <Application/consoleCommands.h>
 #include <Application/consoleIo.h>
 
-using namespace Magic_writer;
-static 	Magic_writer_t * magic_writer_ptr = nullptr;
 
-void Magic_writer_remote_control::init(Magic_writer_t * magic_writer) {
-	magic_writer_ptr = magic_writer;
+static uint32_t rescaled_x;
+static uint32_t rescaled_y;
+static Magic_writer_remote_event_t remote_event;
+static bool remote_control_enable;
+
+
+void Magic_writer_remote_control::init() {
+	rescaled_x = 0;
+	rescaled_y = 0;
+	remote_event = Magic_writer_remote_event_t::NONE;
+	remote_control_enable = false;
 }
+
+std::tuple<Magic_writer_remote_event_t, uint32_t, uint32_t> Magic_writer_remote_control::get_event()
+{
+	auto const current_event = remote_event;
+	remote_event = Magic_writer_remote_event_t::NONE;
+
+	return {current_event, rescaled_x, rescaled_y};
+}
+
+bool Magic_writer_remote_control::is_remote_control_enable()
+{
+	return remote_control_enable;
+}
+
 
 eCommandResult_T Magic_writer_remote_control::enable(const char buffer[]) {
 
@@ -23,33 +44,35 @@ eCommandResult_T Magic_writer_remote_control::enable(const char buffer[]) {
 	result = ConsoleReceiveParamInt16(buffer, 1, &parameterInt);
 	if ( COMMAND_SUCCESS == result )
 	{
-		magic_writer_ptr->enable_remote_control(static_cast<bool>(parameterInt));
+		remote_control_enable = static_cast<bool>(parameterInt);
 
 		ConsoleIoSendString(STR_ENDLINE);
 	}
 	return result;
 }
 
-
 eCommandResult_T Magic_writer_remote_control::select(const char buffer[]) {
 	IGNORE_UNUSED_VARIABLE(buffer);
-	magic_writer_ptr->set_remote_event(Event_t::SELECT);
+
+	remote_event = Magic_writer_remote_event_t::SELECT;
 
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;
 }
 
 eCommandResult_T Magic_writer_remote_control::paint(const char buffer[]) {
-	int16_t x = 0;
-	int16_t y = 0;
+	int16_t param_x = 0;
+	int16_t param_y = 0;
 	eCommandResult_T result;
-	result = ConsoleReceiveParamInt16(buffer, 1, &x);
+	result = ConsoleReceiveParamInt16(buffer, 1, &param_x);
 	if ( COMMAND_SUCCESS == result )
-		result = ConsoleReceiveParamInt16(buffer, 2, &y);
+		result = ConsoleReceiveParamInt16(buffer, 2, &param_y);
 
 	if ( COMMAND_SUCCESS == result )
 	{
-		magic_writer_ptr->set_remote_event(Event_t::PAINT, x, y);
+		remote_event = Magic_writer_remote_event_t::PAINT;
+		rescaled_x = param_x;
+		rescaled_y = param_y;
 
 		ConsoleIoSendString(STR_ENDLINE);
 		return COMMAND_SUCCESS;
@@ -62,7 +85,8 @@ eCommandResult_T Magic_writer_remote_control::paint(const char buffer[]) {
 
 eCommandResult_T Magic_writer_remote_control::clear(const char buffer[]) {
 	IGNORE_UNUSED_VARIABLE(buffer);
-	magic_writer_ptr->set_remote_event(Event_t::CLEAR);
+
+	remote_event = Magic_writer_remote_event_t::CLEAR;
 
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;
@@ -70,7 +94,8 @@ eCommandResult_T Magic_writer_remote_control::clear(const char buffer[]) {
 
 eCommandResult_T Magic_writer_remote_control::check(const char buffer[]) {
 	IGNORE_UNUSED_VARIABLE(buffer);
-	magic_writer_ptr->set_remote_event(Event_t::CHECK);
+
+	remote_event = Magic_writer_remote_event_t::CHECK;
 
 	ConsoleIoSendString(STR_ENDLINE);
 	return COMMAND_SUCCESS;

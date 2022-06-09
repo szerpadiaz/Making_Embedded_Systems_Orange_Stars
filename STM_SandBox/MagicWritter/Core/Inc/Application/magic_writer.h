@@ -32,12 +32,10 @@ public:
 
 	Magic_writer_t();
 	void run();
-	void enable_remote_control(bool enable);
-	void set_remote_event(Event_t event, uint32_t rescaled_x = 0, uint32_t rescaled_y = 0);
 
 private:
-	void handle_local_event();
-	void handle_remote_event();
+	bool handle_local_event();
+	bool handle_remote_event();
 	void handle_event(Event_t event);
 
 	Status_t idle(Event_t event);
@@ -53,10 +51,6 @@ private:
 	uint32_t last_event_time;
 	uint32_t x;
 	uint32_t y;
-
-	Event_t remote_event;
-	bool remote_control_enable;
-
 };
 
 }

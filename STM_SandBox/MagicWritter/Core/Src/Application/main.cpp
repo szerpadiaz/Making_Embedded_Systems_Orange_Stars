@@ -35,7 +35,7 @@ int main(void) {
 	ConsoleInit();
 
 	Magic_writer_t magic_writer {};
-	Magic_writer_remote_control::init(&magic_writer);
+	Magic_writer_remote_control::init();
 
 	while (1) {
 

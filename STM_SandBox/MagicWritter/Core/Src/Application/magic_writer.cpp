@@ -9,6 +9,7 @@
 #include <Application/gui.h>
 #include <Application/button.h>
 #include <Application/handwriting_recognizer.h>
+#include <Application/User_control.h>
 
 using namespace Magic_writer;
 
@@ -22,13 +23,6 @@ Magic_writer_t::Magic_writer_t(void){
 	(this->*state)(Event_t::ENTRY);
 
 	this->last_event_time = Time::ticks_ms();
-
-	this->remote_control_enable = false;
-}
-
-void Magic_writer_t::enable_remote_control(bool enable)
-{
-	this->remote_control_enable = enable;
 }
 
 Status_t Magic_writer_t::idle(Event_t event) {
@@ -142,7 +136,7 @@ Status_t Magic_writer_t::painting(Event_t event) {
 
 void Magic_writer_t::update_selection() {
 
-	constexpr uint32_t update_rate_ms = 300;
+	constexpr int32_t update_rate_ms = 300;
 	auto const now = Time::ticks_ms();
 	if (Time::ticks_diff(now, this->selection_last_update_time) > update_rate_ms) {
 		this->selection_last_update_time = now;
@@ -165,7 +159,7 @@ void Magic_writer_t::verify_selection() {
 		Gui::draw_wrong_answer_animation();
 }
 
-void Magic_writer_t::handle_local_event(){
+bool Magic_writer_t::handle_local_event(){
 	const auto [touch_event, x, y]= Gui::get_touch_event();
 	switch (touch_event) {
 	case Gui_event_t::ON_PAINTING_AREA:
@@ -188,51 +182,54 @@ void Magic_writer_t::handle_local_event(){
 		this->handle_event(Event_t::SELECT);
 	}
 
-	// Check timeout
-	constexpr uint32_t timeout_ms = 100000;
-	const auto now = Time::ticks_ms();
-	if (touch_event != Gui_event_t::NONE || button_pressed) {
-		this->last_event_time = now;
-	}
-	else if (Time::ticks_diff(now, this->last_event_time) > timeout_ms) {
-		this->handle_event(Event_t::TIMEOUT);
-	}
+	return (touch_event != Gui_event_t::NONE || button_pressed);
 }
 
-void Magic_writer_t::handle_remote_event(){
+bool Magic_writer_t::handle_remote_event(){
 
-	switch (this->remote_event) {
-	case Event_t::PAINT:
-	case Event_t::CLEAR:
-	case Event_t::SELECT:
-	case Event_t::CHECK:
-		this->handle_event(this->remote_event);
+	const auto [remote_event, rescaled_x, rescaled_y]= Magic_writer_remote_control::get_event();
+	switch (remote_event) {
+	case Magic_writer_remote_event_t::PAINT: {
+		auto const [x, y] = Gui::from_rescaled_to_painting_point(rescaled_x, rescaled_y);
+		this->x = x;
+		this->y = y;
+		this->handle_event(Event_t::PAINT);
+		break;
+	}
+	case Magic_writer_remote_event_t::CLEAR:
+		this->handle_event(Event_t::CLEAR);
+		break;
+	case Magic_writer_remote_event_t::CHECK:
+		this->handle_event(Event_t::CHECK);
+		break;
+	case Magic_writer_remote_event_t::SELECT:
+		this->handle_event(Event_t::SELECT);
 	default:
 		break;
 	}
 
-	this->remote_event = Event_t::TOTAL_EVENTS;
-}
-
-void Magic_writer_t::set_remote_event(Event_t event, uint32_t rescaled_x, uint32_t rescaled_y)
-{
-	if(this->remote_control_enable)
-	{
-		this->remote_event = event;
-		auto const [x, y] = Gui::from_rescaled_to_painting_point(rescaled_x, rescaled_y);
-		this->x = x;
-		this->y = y;
-	}
+	return (remote_event != Magic_writer_remote_event_t::NONE);
 }
 
 void Magic_writer_t::run(){
 
-	if(this->remote_control_enable)
+	bool there_was_an_event;
+	if(Magic_writer_remote_control::is_remote_control_enable())
 	{
-		this->handle_remote_event();
+		there_was_an_event = this->handle_remote_event();
 	}
 	else {
-		this->handle_local_event();
+		there_was_an_event = this->handle_local_event();
+	}
+
+	// Check timeout
+	constexpr int32_t timeout_ms = 100000;
+	const auto now = Time::ticks_ms();
+	if (there_was_an_event) {
+		this->last_event_time = now;
+	}
+	else if (Time::ticks_diff(now, this->last_event_time) > timeout_ms) {
+		this->handle_event(Event_t::TIMEOUT);
 	}
 }
 
