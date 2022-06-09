@@ -39,9 +39,6 @@ int main(void) {
 
 	while (1) {
 
-		//if (User_control_is_blinking_led_enable())
-		//	Led::toggle();
-
 		ConsoleProcess();
 
 		magic_writer.run();

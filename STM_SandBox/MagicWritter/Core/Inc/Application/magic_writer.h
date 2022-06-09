@@ -49,6 +49,7 @@ private:
 	char selected_char;
 	uint32_t selection_last_update_time;
 	uint32_t last_event_time;
+	uint32_t last_led_toggle_time;
 	uint32_t x;
 	uint32_t y;
 };

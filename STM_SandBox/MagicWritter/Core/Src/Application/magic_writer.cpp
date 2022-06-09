@@ -10,8 +10,13 @@
 #include <Application/button.h>
 #include <Application/handwriting_recognizer.h>
 #include <Application/User_control.h>
+#include <Application/led.h>
 
 using namespace Magic_writer;
+
+constexpr int32_t timeout_ms = 100000;
+constexpr int32_t led_rate_ms = 300;
+constexpr int32_t update_selection_rate_ms = 300;
 
 Magic_writer_t::Magic_writer_t(void){
 
@@ -22,7 +27,9 @@ Magic_writer_t::Magic_writer_t(void){
 	this->state = &Magic_writer_t::ready;
 	(this->*state)(Event_t::ENTRY);
 
-	this->last_event_time = Time::ticks_ms();
+	const auto now = Time::ticks_ms();
+	this->last_event_time = now;
+	this->last_led_toggle_time = now;
 }
 
 Status_t Magic_writer_t::idle(Event_t event) {
@@ -135,10 +142,8 @@ Status_t Magic_writer_t::painting(Event_t event) {
 }
 
 void Magic_writer_t::update_selection() {
-
-	constexpr int32_t update_rate_ms = 300;
 	auto const now = Time::ticks_ms();
-	if (Time::ticks_diff(now, this->selection_last_update_time) > update_rate_ms) {
+	if (Time::ticks_diff(now, this->selection_last_update_time) > update_selection_rate_ms) {
 		this->selection_last_update_time = now;
 		this->selected_char = (selected_char == '9') ? '0' : (selected_char + 1);
 		Gui::draw_selected_char_display_area(this->selected_char);
@@ -223,7 +228,6 @@ void Magic_writer_t::run(){
 	}
 
 	// Check timeout
-	constexpr int32_t timeout_ms = 100000;
 	const auto now = Time::ticks_ms();
 	if (there_was_an_event) {
 		this->last_event_time = now;
@@ -231,17 +235,22 @@ void Magic_writer_t::run(){
 	else if (Time::ticks_diff(now, this->last_event_time) > timeout_ms) {
 		this->handle_event(Event_t::TIMEOUT);
 	}
+
+	// Toggle status led
+	if (Time::ticks_diff(now, this->last_led_toggle_time) > led_rate_ms) {
+		Led::toggle();
+		this->last_led_toggle_time = now;
+	}
 }
 
 void Magic_writer_t::handle_event(Event_t event){
-
+    //ASSERT((this->state != (State_Handler_t)0) && (event < Event_t::TOTAL_EVENTS));
     Status_t status;
     State_Handler_t prev_state = this->state;
-    //Q_ASSERT((me->state != (StateHandler)0) && (e->sig < MAX_SIG));
-    status = (this->*state)(event);
+    status = (this->*state)(event); // updates this->state
 
     if(status == Status_t::TRANSITION) {
-        //Q_ASSERT((me->state != (StateHandler)0));
+        //ASSERT((this->state != (State_Handler_t)0));
         (this->*prev_state)(Event_t::EXIT);
         (this->*state)(Event_t::ENTRY);
     }
