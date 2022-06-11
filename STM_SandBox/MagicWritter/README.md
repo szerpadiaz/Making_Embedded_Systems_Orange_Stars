@@ -1,19 +1,20 @@
 # Magic writer : A handwriting trainer for kids
 
 Magic writer is a toy to help kids with learning how to write the numbers from 1 to 9 as well as the letters from a to z.
-Figure 1 shows how Magic Writer looks like.
+Figure 1 shows how Magic Writer shows the protoype based on an stm32f4-discovery board.
 
-![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_1.jpg)
-![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_2.jpg)
-
-## System hardware
-
-The proyect uses am stm32f4-discovery board.
+<p float="left">
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_1.jpg" alt="image 1" width="200"/>
+</p>
 
 ## How does it work?
 
-![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_3.jpg)
-![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_4.jpg)
+<p float="left">
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_2.jpg" alt="image 2" width="200"/>
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_3.jpg" alt="image 3" width="200"/>
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_4.jpg" alt="image 4" width="200"/>
+</p>
+
 
 Magic Writer works as follows:
 
@@ -57,4 +58,4 @@ The workflow follow can be described as follows:
 
 The model metrics are shown below:
 
-![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/ai_model_matrix.png)
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/ai_model_matrix.png" alt="image 5" width="500"/>
