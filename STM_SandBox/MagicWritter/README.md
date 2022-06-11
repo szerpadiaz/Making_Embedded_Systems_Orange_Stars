@@ -47,9 +47,9 @@ The model was trained with images from [the NIST database](https://www.nist.gov/
 The workflow follow can be described as follows:
  1. Select a set of images form the database to be used as a input data set. Magic writer uses a sub-set of the hsf_4 partition.
  2. Pre-process the selected images and perform data-augmentation to improve the quality of the ML-model. See:
- 	a. [Input data set](https://drive.google.com/drive/folders/17RtXM1MVcgyUMoeIjmoOlJwrE-I_i-8W)
- 	b. [Processing python script](https://colab.research.google.com/drive/1YkGoW1ZgTk_fhABNCcS_HA6v-yvXLbE0#scrollTo=ZkEKJ7g9u21N)
- 	c. [Output data set](https://drive.google.com/drive/folders/1uDkGckb4qN-0c4PEV3rjXwat7OAA4WyX)
+ 	- [Input data set](https://drive.google.com/drive/folders/17RtXM1MVcgyUMoeIjmoOlJwrE-I_i-8W)
+ 	- [Processing python script](https://colab.research.google.com/drive/1YkGoW1ZgTk_fhABNCcS_HA6v-yvXLbE0#scrollTo=ZkEKJ7g9u21N)
+ 	- [Output data set](https://drive.google.com/drive/folders/1uDkGckb4qN-0c4PEV3rjXwat7OAA4WyX)
  3. Create a project in edge-impulse to load the images and develop [the model](https://studio.edgeimpulse.com/public/108724/latest).
  4. Generate a CubeIDE library from the edge-impulse proyect and integrate it as explained [here](https://docs.edgeimpulse.com/docs/deployment/using-cubeai)
  5. Encapsulate the model into a software module that gets a flat-28x28-image and return the predicted character.
