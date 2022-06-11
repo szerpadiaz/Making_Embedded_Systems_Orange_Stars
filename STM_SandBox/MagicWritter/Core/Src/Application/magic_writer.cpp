@@ -64,8 +64,8 @@ Status_t Magic_writer_t::ready(Event_t event) {
     Status_t status;
     switch (event) {
     	case Event_t::ENTRY: {
+    		Gui::clear_painting_area(this->selected_char);
     		Gui::print_info(">> STATE: READY");
-    		Gui::clear_painting_area();
     		status = Status_t::HANDLED;
     		break;
     	}
@@ -115,8 +115,7 @@ Status_t Magic_writer_t::painting(Event_t event) {
             status = Status_t::HANDLED;
             break;
         }
-        case Event_t::CLEAR: {
-			Gui::clear_painting_area();
+        case Event_t::CLEAR: {;
             this->state = &Magic_writer_t::ready;
             status = Status_t::TRANSITION;
             break;

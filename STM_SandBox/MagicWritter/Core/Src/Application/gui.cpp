@@ -14,6 +14,7 @@
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_ts.h"
 
+#include "../../../Utilities/main_menu_img.h"
 #include "../../../Utilities/right_answer_img.h"
 #include "../../../Utilities/wrong_answer_img.h"
 
@@ -29,12 +30,12 @@ constexpr uint32_t CLEAR_BUTTON_COLOR = LCD_COLOR_RED;
 
 constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_WIDTH = PAINTING_IMAGE_WIDTH;
 constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_HIGHT = PAINTING_IMAGE_HIGH;
-constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_X = 120 - SELECTED_CHAR_DISPLAY_AREA_WIDTH - 4;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_X = 120 - SELECTED_CHAR_DISPLAY_AREA_WIDTH;
 constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_Y = 12;
 
 constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_WIDTH = PAINTING_IMAGE_WIDTH;
 constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_HIGHT = PAINTING_IMAGE_HIGH;
-constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_X = 120 + 4;
+constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_X = 120 + 8;
 constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_Y = 12;
 
 constexpr uint32_t OK_BUTTON_RADIUS = 20;
@@ -48,10 +49,10 @@ constexpr uint32_t PAINTING_AREA_HIGHT = PAINTING_IMAGE_HIGH * GUI_PAINTING_AREA
 constexpr uint32_t PAINTING_AREA_X = 8;
 constexpr uint32_t PAINTING_AREA_Y = 55;
 
-constexpr uint32_t INFO_DISPLAY_AREA_WIDTH = PAINTING_AREA_WIDTH;
-constexpr uint32_t INFO_DISPLAY_AREA_HIGHT = 32;
-constexpr uint32_t INFO_DISPLAY_AREA_X = PAINTING_AREA_X;
-constexpr uint32_t INFO_DISPLAY_AREA_Y = PAINTING_AREA_Y + PAINTING_AREA_HIGHT + 5;
+constexpr uint32_t INFO_DISPLAY_AREA_WIDTH = PAINTING_AREA_WIDTH - 20;
+constexpr uint32_t INFO_DISPLAY_AREA_HIGHT = 16;
+constexpr uint32_t INFO_DISPLAY_AREA_X = PAINTING_AREA_X + 10;
+constexpr uint32_t INFO_DISPLAY_AREA_Y = PAINTING_AREA_Y + PAINTING_AREA_HIGHT + 18;
 
 
 void Gui::init() {
@@ -75,6 +76,7 @@ void Gui::init() {
 
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
+	BSP_LCD_SelectLayer(0);
 	draw_menu();
 
 	Gui::print_info(" >> ");
@@ -115,60 +117,11 @@ raw_painting_image_t const * Gui::get_painting_image() {
 }
 
 void Gui::draw_menu(void) {
-	/* Draw background Layer */
-	BSP_LCD_SelectLayer(0);
-	BSP_LCD_Clear(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 0, BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
-	draw_clear_button();
-	draw_ok_button();
-	draw_selected_char_display_area(' ');
-	draw_painting_area();
-	draw_rescaled_painting_display_area();
-	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
+	clear_painting_area(' ');
 
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
-}
-
-void Gui::draw_painting_area() {
-
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(PAINTING_AREA_X, PAINTING_AREA_Y, PAINTING_AREA_WIDTH, PAINTING_AREA_HIGHT);
-
-	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
-	BSP_LCD_DrawRect(PAINTING_AREA_X, PAINTING_AREA_Y, PAINTING_AREA_WIDTH, PAINTING_AREA_HIGHT);
-}
-
-bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
-	const bool x_in_rect = (x > PAINTING_AREA_X + GUI_PAINTING_PEN_RADIUS
-			&& x < (PAINTING_AREA_X + PAINTING_AREA_WIDTH - GUI_PAINTING_PEN_RADIUS));
-	const bool y_in_rect = (y > PAINTING_AREA_Y + GUI_PAINTING_PEN_RADIUS
-			&& y < (PAINTING_AREA_Y + PAINTING_AREA_HIGHT - GUI_PAINTING_PEN_RADIUS));
-
-	return (x_in_rect && y_in_rect);
-}
-
-void Gui::clear_painting_area() {
-	draw_rescaled_painting_display_area();
-	draw_painting_area();
-	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
-	// make sure to set painting setting again
-	// BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	// BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
-}
-
-void Gui::draw_clear_button() {
-	BSP_LCD_SetTextColor(CLEAR_BUTTON_COLOR);
-	BSP_LCD_DrawCircle(CLEAR_BUTTON_X, CLEAR_BUTTON_Y, CLEAR_BUTTON_RADIUS + 2);
-	BSP_LCD_FillCircle(CLEAR_BUTTON_X, CLEAR_BUTTON_Y, CLEAR_BUTTON_RADIUS);
-}
-
-bool Gui::is_position_in_clear_button(uint32_t x, uint32_t y) {
-	const bool x_in_rect = x > (CLEAR_BUTTON_X - CLEAR_BUTTON_RADIUS) && x < (CLEAR_BUTTON_X + CLEAR_BUTTON_RADIUS);
-	const bool y_in_rect = y > (CLEAR_BUTTON_Y - CLEAR_BUTTON_RADIUS) && y < (CLEAR_BUTTON_Y + CLEAR_BUTTON_RADIUS);
-	return (x_in_rect && y_in_rect);
 }
 
 void Gui::draw_selected_char_display_area(char selected_char) {
@@ -176,12 +129,6 @@ void Gui::draw_selected_char_display_area(char selected_char) {
 	// Clear
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_FillRect(SELECTED_CHAR_DISPLAY_AREA_X,
-			SELECTED_CHAR_DISPLAY_AREA_Y,
-			SELECTED_CHAR_DISPLAY_AREA_WIDTH,
-			SELECTED_CHAR_DISPLAY_AREA_HIGHT);
-	// Draw line
-	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
-	BSP_LCD_DrawRect(SELECTED_CHAR_DISPLAY_AREA_X,
 			SELECTED_CHAR_DISPLAY_AREA_Y,
 			SELECTED_CHAR_DISPLAY_AREA_WIDTH,
 			SELECTED_CHAR_DISPLAY_AREA_HIGHT);
@@ -195,21 +142,25 @@ void Gui::draw_selected_char_display_area(char selected_char) {
 			SELECTED_CHAR_DISPLAY_AREA_Y + 6, selected_char);
 }
 
-void Gui::draw_rescaled_painting_display_area() {
+bool Gui::is_position_in_painting_area(uint32_t x, uint32_t y) {
+	const bool x_in_rect = (x > PAINTING_AREA_X + GUI_PAINTING_PEN_RADIUS
+			&& x < (PAINTING_AREA_X + PAINTING_AREA_WIDTH - GUI_PAINTING_PEN_RADIUS));
+	const bool y_in_rect = (y > PAINTING_AREA_Y + GUI_PAINTING_PEN_RADIUS
+			&& y < (PAINTING_AREA_Y + PAINTING_AREA_HIGHT - GUI_PAINTING_PEN_RADIUS));
 
-	// Clear
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(RESCALED_PAINTING_DISPLAY_AREA_X,
-			RESCALED_PAINTING_DISPLAY_AREA_Y,
-			RESCALED_PAINTING_DISPLAY_AREA_WIDTH,
-			RESCALED_PAINTING_DISPLAY_AREA_HIGHT);
+	return (x_in_rect && y_in_rect);
+}
 
-	// Draw line
-	BSP_LCD_SetTextColor(GUI_LAYOUT_LINE_COLOR);
-	BSP_LCD_DrawRect(RESCALED_PAINTING_DISPLAY_AREA_X,
-			RESCALED_PAINTING_DISPLAY_AREA_Y,
-			RESCALED_PAINTING_DISPLAY_AREA_WIDTH,
-			RESCALED_PAINTING_DISPLAY_AREA_HIGHT);
+void Gui::clear_painting_area(char selected_char) {
+	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)main_menu_img);
+	draw_selected_char_display_area(selected_char);
+	std::fill_n(raw_painting_image, PAINTING_IMAGE_LENGTH, PAINTING_IMAGE_PIXEL_CLEAR_COLOR);
+}
+
+bool Gui::is_position_in_clear_button(uint32_t x, uint32_t y) {
+	const bool x_in_rect = x > (CLEAR_BUTTON_X - CLEAR_BUTTON_RADIUS) && x < (CLEAR_BUTTON_X + CLEAR_BUTTON_RADIUS);
+	const bool y_in_rect = y > (CLEAR_BUTTON_Y - CLEAR_BUTTON_RADIUS) && y < (CLEAR_BUTTON_Y + CLEAR_BUTTON_RADIUS);
+	return (x_in_rect && y_in_rect);
 }
 
 std::pair<uint32_t, uint32_t> Gui::from_rescaled_to_painting_point(uint32_t rescaled_x, uint32_t rescaled_y)
@@ -237,12 +188,6 @@ void Gui::update_painting_areas(uint32_t x, uint32_t y)
 	BSP_LCD_DrawPixel(dst_x, dst_y, GUI_PAINTING_PEN_COLOR);
 }
 
-void Gui::draw_ok_button() {
-	BSP_LCD_SetTextColor(OK_BUTTON_COLOR);
-	BSP_LCD_DrawCircle(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_RADIUS + 2);
-	BSP_LCD_FillCircle(OK_BUTTON_X, OK_BUTTON_Y, OK_BUTTON_RADIUS);
-}
-
 bool Gui::is_position_in_ok_button(uint32_t x, uint32_t y) {
 	const bool x_in_rect = x > (OK_BUTTON_X - OK_BUTTON_RADIUS) && x < (OK_BUTTON_X + OK_BUTTON_RADIUS);
 	const bool y_in_rect = y > (OK_BUTTON_Y - OK_BUTTON_RADIUS) && y < (OK_BUTTON_Y + OK_BUTTON_RADIUS);
@@ -251,7 +196,6 @@ bool Gui::is_position_in_ok_button(uint32_t x, uint32_t y) {
 
 void Gui::draw_right_answer_animation() {
 	BSP_LCD_SelectLayer(1);
-	//BSP_LCD_Clear(LCD_COLOR_WHITE);
 
 	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)right_answer_img);
 	BSP_LCD_SetLayerVisible(1, ENABLE);
@@ -267,7 +211,6 @@ void Gui::draw_right_answer_animation() {
 
 void Gui::draw_wrong_answer_animation() {
 	BSP_LCD_SelectLayer(1);
-	//BSP_LCD_Clear(LCD_COLOR_WHITE);
 
 	BSP_LCD_DrawBitmap(0, 0, (uint8_t *)wrong_answer_img);
 	BSP_LCD_SetLayerVisible(1, ENABLE);
@@ -283,22 +226,19 @@ void Gui::draw_wrong_answer_animation() {
 
 void Gui::vprint(const char* string) {
 
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_FillRect(INFO_DISPLAY_AREA_X, INFO_DISPLAY_AREA_Y, INFO_DISPLAY_AREA_WIDTH, INFO_DISPLAY_AREA_HIGHT);
 
-	BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 
 	sFONT *pFont = &Font12;
 	BSP_LCD_SetFont(pFont);
 	BSP_LCD_DisplayStringAt(
-			INFO_DISPLAY_AREA_X + pFont->Width,
-			INFO_DISPLAY_AREA_Y + pFont->Height,
+			INFO_DISPLAY_AREA_X,
+			INFO_DISPLAY_AREA_Y,
 			(uint8_t*) string,
 			LEFT_MODE);
-
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
 }
 
 void Gui::print_info(const char *format, ...) {
