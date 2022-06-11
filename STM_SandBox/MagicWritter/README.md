@@ -3,8 +3,8 @@
 Magic writer is a toy to help kids with learning how to write the numbers from 1 to 9 as well as the letters from a to z.
 Figure 1 shows how Magic Writer looks like.
 
-![Screenshot](./Utilites/images/prototype_1.jpg)
-![Screenshot](./Utilites/images/prototype_2.jpeg)
+![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_1.jpg)
+![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_2.jpg)
 
 ## System hardware
 
@@ -12,8 +12,8 @@ The proyect uses am stm32f4-discovery board.
 
 ## How does it work?
 
-![Screenshot](./Utilites/images/prototype_3.jpeg)
-![Screenshot](./Utilites/images/prototype_4.jpeg)
+![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_3.jpg)
+![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/prototype_4.jpg)
 
 Magic Writer works as follows:
 
@@ -57,4 +57,4 @@ The workflow follow can be described as follows:
 
 The model metrics are shown below:
 
-![Screenshot](./Utilites/images/ai_model_matrix.png)
+![Screenshot](/STM_SandBox/MagicWritter/Utilites/images/ai_model_matrix.png)
