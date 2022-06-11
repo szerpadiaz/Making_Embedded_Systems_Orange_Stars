@@ -24,13 +24,10 @@ static raw_painting_image_t raw_painting_image[PAINTING_IMAGE_LENGTH];
 #define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
 
 constexpr uint32_t CLEAR_BUTTON_RADIUS = 20;
-constexpr uint32_t CLEAR_BUTTON_X = 40;
+constexpr uint32_t CLEAR_BUTTON_X = 30;
 constexpr uint32_t CLEAR_BUTTON_Y = 25;
-constexpr uint32_t CLEAR_BUTTON_COLOR = LCD_COLOR_RED;
 
-constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_WIDTH = PAINTING_IMAGE_WIDTH;
-constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_HIGHT = PAINTING_IMAGE_HIGH;
-constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_X = 120 - SELECTED_CHAR_DISPLAY_AREA_WIDTH;
+constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_X = 120 - 29;
 constexpr uint32_t SELECTED_CHAR_DISPLAY_AREA_Y = 12;
 
 constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_WIDTH = PAINTING_IMAGE_WIDTH;
@@ -39,9 +36,8 @@ constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_X = 120 + 8;
 constexpr uint32_t RESCALED_PAINTING_DISPLAY_AREA_Y = 12;
 
 constexpr uint32_t OK_BUTTON_RADIUS = 20;
-constexpr uint32_t OK_BUTTON_X = 240 - 40;
+constexpr uint32_t OK_BUTTON_X = 240 - 30;
 constexpr uint32_t OK_BUTTON_Y = 25;
-constexpr uint32_t OK_BUTTON_COLOR = LCD_COLOR_GREEN;
 
 constexpr uint32_t GUI_LAYOUT_LINE_COLOR = LCD_COLOR_BLACK;
 constexpr uint32_t PAINTING_AREA_WIDTH = PAINTING_IMAGE_WIDTH * GUI_PAINTING_AREA_RESCALED_RATIO;
@@ -125,15 +121,6 @@ void Gui::draw_menu(void) {
 }
 
 void Gui::draw_selected_char_display_area(char selected_char) {
-
-	// Clear
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(SELECTED_CHAR_DISPLAY_AREA_X,
-			SELECTED_CHAR_DISPLAY_AREA_Y,
-			SELECTED_CHAR_DISPLAY_AREA_WIDTH,
-			SELECTED_CHAR_DISPLAY_AREA_HIGHT);
-
-	// Draw char
 	sFONT *pFont = &Font20;
 	BSP_LCD_SetFont(pFont);
 	BSP_LCD_SetTextColor(GUI_PAINTING_PEN_COLOR);
