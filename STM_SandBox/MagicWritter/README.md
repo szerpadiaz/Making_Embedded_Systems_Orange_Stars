@@ -34,9 +34,9 @@ The software block diagram in Figure 2 shows the main components of the embedded
 
 The main components are described below.
 
-### The Magic writer - state machine
+### The Magic writer - Finite State Machine
 
-	To be added
+<img src="https://github.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/blob/main/STM_SandBox/MagicWritter/Utilities/images/FSM.jpg" alt="image 5" />
 
 ### The handwriting recognizer
 
@@ -58,4 +58,4 @@ The workflow follow can be described as follows:
 
 The model metrics are shown below:
 
-<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/ai_model_matrix.png" alt="image 5" width="500"/>
+<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/ai_model_matrix.png" alt="image 6"/>
