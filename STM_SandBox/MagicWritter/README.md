@@ -1,12 +1,9 @@
 # Magic writer : A handwriting trainer for kids
 
 Magic writer is a toy to help kids with learning how to write the numbers from 1 to 9 as well as the letters from a to z.
-Figure 1 shows how Magic Writer shows the protoype based on an stm32f4-discovery board.
+Figure 1 shows how Magic Writer shows the protoype based on an stm32f4-discovery board (click to see the demo video).
 
-<p float="left">
-<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_1.jpg" alt="image 1" width="200"/>
-<video src="https://youtu.be/NxWTGJnerP8" width="200" />
-</p>
+ [<img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_1.jpg" width="200">](https://youtu.be/NxWTGJnerP8 "Click to see video")
  
 ## How does it work?
 
