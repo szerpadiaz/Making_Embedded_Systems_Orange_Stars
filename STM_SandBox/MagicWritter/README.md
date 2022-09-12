@@ -5,8 +5,9 @@ Figure 1 shows how Magic Writer shows the protoype based on an stm32f4-discovery
 
 <p float="left">
 <img src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/prototype_1.jpg" alt="image 1" width="200"/>
+<video src="https://raw.githubusercontent.com/szerpadiaz/Making_Embedded_Systems_Orange_Stars/main/STM_SandBox/MagicWritter/Utilities/images/magic-writer-demo_480.mov" width="200"></video>
 </p>
-
+ 
 ## How does it work?
 
 <p float="left">
